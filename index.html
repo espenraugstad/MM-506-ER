@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MM-506-ER</title>
+  </head>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    button {
+      margin: 1rem 0;
+    }
+
+    #parsedOutput {
+      font-family: sans-serif;
+    }
+
+    .slide{
+        margin: 1rem 0;
+        padding-inline: 1rem;
+        border: 1px solid black;
+        
+    }
+  </style>
+  <body>
+    <h1>Testing Slide Creation From Markdown and More</h1>
+    <textarea name="editor" id="editor" cols="30" rows="10"></textarea>
+    <div>
+      <button id="parseBtn">Parse</button>
+      <button id="clearBtn">Clear</button>
+    </div>
+
+    <div id="parsedOutput"></div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+      // Html elements
+      const editor = document.getElementById("editor");
+      const parseBtn = document.getElementById("parseBtn");
+      const clearBtn = document.getElementById("clearBtn");
+      const parsedOutput = document.getElementById("parsedOutput");
+
+      window.onload = ()=> {
+        // Fill the editor with some test text
+        editor.value = `# Heading 1\nThis is some example text.\n\n---\n\n# More fun stuff\nThis project is being developed as part of a masters project at the [University of Agder].\n\n---\n\n# This is the 3rd slide\nAnd so it goes on...\n\n[University of Agder]: https://www.uia.no/
+        `;
+      }
+
+      parseBtn.addEventListener("click", () => {
+        // Parse content of the editor
+        const parsed = marked.parse(editor.value);
+
+        // Split parsed content into slides
+        const segmentedOutput = parsed.split("<hr>");
+
+        // Create slides for each segment
+        for (slide of segmentedOutput) {
+          // Create a new slide-div
+          const slideDiv = document.createElement("div");
+          slideDiv.classList.add("slide");
+
+          // Add content to the slide
+          slideDiv.innerHTML = slide;
+
+          // Add all the slide to the output
+          parsedOutput.appendChild(slideDiv);
+        }
+      });
+
+      clearBtn.addEventListener("click", () => {
+        editor.value = "";
+      });
+    </script>
+  </body>
+</html>
