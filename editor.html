@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing text editors</title>
+</head>
+<style>
+    *{
+        font-family: sans-serif;
+    }
+    body{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    button{
+        margin: 1rem 0;
+    }
+
+    #toolbar{
+        margin: 1rem 0;
+        padding: .3rem;
+        border: 1px solid black;
+        
+    }
+
+
+</style>
+<body>
+    <h1>Testing text editor</h1>
+    <div id="editor">
+        <div id="toolbar">
+            Toolbar <br>
+            <button id="heading1">H1</button>
+        </div>
+        <textarea id="editable">Default text.</textarea>
+    </div>
+    <button id="parse">Parse</button>
+    
+    <script>
+        const editable = document.getElementById('editable');
+        const heading1 = document.getElementById('heading1');
+
+        heading1.addEventListener('click', ()=>{
+            // Get the index where the header should be inserted
+            let selectionStart = editable.selectionStart; 
+
+            // Insert header 1 markdown
+            insert("# ", selectionStart);
+
+            // Return focus to textarea
+            editable.focus();
+        });
+
+        function insert(text, index){
+            // Get the current value of the editor
+            let textContent = editable.value;
+
+            // Get the part of the editor to the left
+            let startString = textContent.slice(0,index);
+
+            // And to the right
+            let endString = textContent.slice(index);
+
+            // Create a new string with new text between left and right text
+            let newString = startString + text + endString;
+
+            // Replace content of the editor with the new string.
+            editable.value = newString; 
+                        
+        }
+
+    </script>
+</body>
+
+</html>
