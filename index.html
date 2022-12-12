@@ -47,13 +47,16 @@
 
       window.onload = ()=> {
         // Fill the editor with some test text
-        editor.value = `# Heading 1\nThis is some example text.\n\n---\n\n# More fun stuff\nThis project is being developed as part of a masters project at the [University of Agder].\n\n---\n\n# This is the 3rd slide\nAnd so it goes on...\n\n[University of Agder]: https://www.uia.no/
+        editor.value = `# Heading 1\nThis is some example text.\n\n---\n\n# More fun stuff\nThis project is being developed as part of a masters project at the [University of Agder].\n\n---\n\n# This is the 3rd slide\nAnd here is an image: \n\n![Alt text](images/book-cover.jpg)\n\n[University of Agder]: https://www.uia.no/
         `;
       }
 
       parseBtn.addEventListener("click", () => {
+        // Clear the slides if already existing
+        parsedOutput.innerHTML = "";
         // Parse content of the editor
         const parsed = marked.parse(editor.value);
+        console.log(parsed);
 
         // Split parsed content into slides
         const segmentedOutput = parsed.split("<hr>");
