@@ -7,11 +7,22 @@ const parsedOutput = document.getElementById("parsedOutput");
 // Toolbar buttons
 const heading1 = document.getElementById("heading1");
 
-window.onload = () => {
-  // Fill the editor with some test text
-  editor.value = `# Heading 1\nThis is some example text.\n\n---\n\n# More fun stuff\nThis project is being developed as part of a masters project at the [University of Agder].\n\n---\n\n# This is the 3rd slide\nAnd here is an image: \n\n![Alt text](images/book-cover.jpg)\n\n[University of Agder]: https://www.uia.no/
-  `;
+// All presentations for current user
+let presentations = null;
+
+window.onload = async () => {
+  // Get the default "presentation" from the server
+  presentations = await getDefaultPresentation();
+
+  // Add the markdown from the default presentation to the editor
+  editor.value = presentations[0].markdown;
 };
+
+async function getDefaultPresentation() {
+  let response = await fetch("/getDefault");
+  let data = await response.json();
+  return JSON.parse(data);
+}
 
 // Array containing the slides
 let slideDeck = [];
@@ -49,7 +60,7 @@ function insert(text, index) {
   editor.value = newString;
 }
 
-// Parsing
+/***** PARSING *****/
 parseBtn.addEventListener("click", () => {
   // Clear the slides if already existing
   parsedOutput.innerHTML = "";
@@ -81,7 +92,7 @@ parseBtn.addEventListener("click", () => {
     index++;
   }
 
-  console.log(slideDeck);
+  console.log(JSON.stringify(slideDeck));
 });
 
 clearBtn.addEventListener("click", () => {
