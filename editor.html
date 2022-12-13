@@ -1,79 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Testing text editors</title>
-</head>
-<style>
-    *{
-        font-family: sans-serif;
+  </head>
+  <style>
+    * {
+      font-family: sans-serif;
     }
-    body{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    button{
-        margin: 1rem 0;
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    #toolbar{
-        margin: 1rem 0;
-        padding: .3rem;
-        border: 1px solid black;
-        
+    button {
+      margin: 1rem 0;
     }
 
+    #editor,
+    #editorCE {
+      border: 1px solid black;
+      padding: 1rem;
+    }
 
-</style>
-<body>
+    #toolbar,
+    #toolbarCE {
+      margin: 1rem 0;
+      padding: 0.3rem;
+      border: 1px solid black;
+    }
+
+    #editableCE {
+      border: 1px solid black;
+      padding: 1rem 0.5rem;
+    }
+  </style>
+  <body>
     <h1>Testing text editor</h1>
     <div id="editor">
-        <div id="toolbar">
-            Toolbar <br>
-            <button id="heading1">H1</button>
-        </div>
-        <textarea id="editable">Default text.</textarea>
+      <h2>This is a textarea editor</h2>
+      <div id="toolbar">
+        Toolbar <br />
+        <button id="heading1">H1</button>
+      </div>
+      <textarea id="editable">Default text.</textarea>
     </div>
     <button id="parse">Parse</button>
-    
+    <div id="editorCE">
+      <h2>This is a contenteditable editor</h2>
+      <div id="toolbarCE">
+        Toolbar <br />
+        <button id="heading1CE">H1</button>
+      </div>
+      <div id="editableCE" contenteditable="true">Default text</div>
+    </div>
+
     <script>
-        const editable = document.getElementById('editable');
-        const heading1 = document.getElementById('heading1');
+      const editable = document.getElementById("editable");
+      const heading1 = document.getElementById("heading1");
 
-        heading1.addEventListener('click', ()=>{
-            // Get the index where the header should be inserted
-            let selectionStart = editable.selectionStart; 
+      const editableCE = document.getElementById("editableCE");
+      const heading1CE = document.getElementById("heading1CE");
 
-            // Insert header 1 markdown
-            insert("# ", selectionStart);
+      heading1.addEventListener("click", () => {
+        // Get the index where the header should be inserted
+        let selectionStart = editable.selectionStart;
 
-            // Return focus to textarea
-            editable.focus();
-        });
+        // Insert header 1 markdown
+        insert("# ", selectionStart);
 
-        function insert(text, index){
-            // Get the current value of the editor
-            let textContent = editable.value;
+        // Return focus to textarea
+        editable.focus();
+      });
 
-            // Get the part of the editor to the left
-            let startString = textContent.slice(0,index);
+      heading1CE.addEventListener("click", () => {
+        console.log(editableCE);
+        let cursorIndex = getCaretIndex(editableCE);
+        console.log(cursorIndex);
+        insertCE("# ", cursorIndex);
+      });
 
-            // And to the right
-            let endString = textContent.slice(index);
+      function insertCE(text, index){
+        // Get the current content of editor
+        let textContent = editableCE.innerHTML;
 
-            // Create a new string with new text between left and right text
-            let newString = startString + text + endString;
+        // Get the part of the editor to the left
+        let startString = textContent.slice(0, index);
 
-            // Replace content of the editor with the new string.
-            editable.value = newString; 
-                        
+        // And to the right
+        let endString = textContent.slice(index);
+
+        // Create a new string with new text between left and right text
+        let newString = startString + text + endString;
+
+        // Replace content of the editor with the new string.
+        editableCE.innerHTML = newString;
+      }
+
+      function insert(text, index) {
+        // Get the current value of the editor
+        let textContent = editable.value;
+
+        // Get the part of the editor to the left
+        let startString = textContent.slice(0, index);
+
+        // And to the right
+        let endString = textContent.slice(index);
+
+        // Create a new string with new text between left and right text
+        let newString = startString + text + endString;
+
+        // Replace content of the editor with the new string.
+        editable.value = newString;
+      }
+
+      function getCaretIndex(element) {
+        let position = 0;
+        const isSupported = typeof window.getSelection !== "undefined";
+        if (isSupported) {
+          const selection = window.getSelection();
+          if (selection.rangeCount !== 0) {
+            const range = window.getSelection().getRangeAt(0);
+            const preCaretRange = range.cloneRange();
+            preCaretRange.selectNodeContents(element);
+            preCaretRange.setEnd(range.endContainer, range.endOffset);
+            position = preCaretRange.toString().length;
+          }
         }
-
+        return position;
+      }
     </script>
-</body>
-
+  </body>
 </html>
