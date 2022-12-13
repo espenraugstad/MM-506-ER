@@ -13,6 +13,9 @@ window.onload = () => {
   `;
 };
 
+// Array containing the slides
+let slideDeck = [];
+
 // Toolbar events
 heading1.addEventListener("click", () => {
   console.log("h1");
@@ -52,12 +55,13 @@ parseBtn.addEventListener("click", () => {
   parsedOutput.innerHTML = "";
   // Parse content of the editor
   const parsed = marked.parse(editor.value);
-  console.log(parsed);
 
   // Split parsed content into slides
   const segmentedOutput = parsed.split("<hr>");
 
   // Create slides for each segment
+  let index = 1; // Slide number
+  slideDeck = []; // Reset the slideDeck array
   for (slide of segmentedOutput) {
     // Create a new slide-div
     const slideDiv = document.createElement("div");
@@ -66,9 +70,18 @@ parseBtn.addEventListener("click", () => {
     // Add content to the slide
     slideDiv.innerHTML = slide;
 
-    // Add all the slide to the output
+    // Add all the slide to the preview-output
     parsedOutput.appendChild(slideDiv);
+
+    // Add the slide to the slidedeck-array
+    slideDeck.push({
+        index: index,
+        content: slide
+    });
+    index++;
   }
+
+  console.log(slideDeck);
 });
 
 clearBtn.addEventListener("click", () => {
