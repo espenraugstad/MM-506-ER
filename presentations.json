@@ -20,7 +20,8 @@
         "notes": [
             {
                 "user-id": 0,
-                "markdown": "# Notes\nThese are some notes",
+                "user": "Sam Student",
+                "markdown": "# Notes\nThese are some notes.\n## Important points\n* Do as I say, not as I do.\n* Scooby Dooby Do",
                 "public": true
             }
         ]

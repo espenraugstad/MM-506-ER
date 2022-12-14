@@ -3,9 +3,12 @@ const editor = document.getElementById("editor");
 const previewBtn = document.getElementById("previewBtn");
 const clearBtn = document.getElementById("clearBtn");
 const parsedOutput = document.getElementById("parsedOutput");
+const notesBtn = document.getElementById("notesBtn");
+const notesOutput = document.getElementById("notesOutput");
 
 // Control what is showing
 let previewing = false;
+let showingNotes = false;
 
 // Toolbar buttons
 const heading1 = document.getElementById("heading1");
@@ -121,3 +124,34 @@ clearBtn.addEventListener("click", () => {
 });
 
 /***** NOTES FROM OTHER USERS *****/
+notesBtn.addEventListener("click", () => {
+  if (showingNotes) {
+    // Hide notes
+    notesOutput.innerHTML = "";
+    notesBtn.innerHTML = "Show notes";
+    showingNotes = false;
+  } else {
+    // For now, only working with default presentation
+    let currentPresentation = presentations[0];
+
+    // Loop through all notes, and for each (public) note, parse and then show.
+    for (let notes of currentPresentation.notes) {
+      if (notes.public) {
+        let parsedNotes = marked.parse(notes.markdown);
+
+        // Create a new div for the notes
+        let currentNotesDiv = document.createElement("div");
+        currentNotesDiv.classList.add("note");
+        // Add html
+        currentNotesDiv.innerHTML = `<h4>${notes.user} writes:</h4> ${parsedNotes}<hr >`;
+        // Add to notes-output
+        notesOutput.appendChild(currentNotesDiv);
+      }
+    }
+
+    // Change name of notes button
+    notesBtn.innerHTML = "Hide notes";
+
+    showingNotes = true;
+  }
+});

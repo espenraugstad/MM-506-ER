@@ -8,7 +8,8 @@ button {
   margin: 1rem 0;
 }
 
-#authoring {
+#authoring,
+#notesOutput {
   display: flex;
   flex-direction: column;
   width: 50%;
