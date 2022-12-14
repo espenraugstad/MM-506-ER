@@ -1,8 +1,11 @@
 // Html elements
 const editor = document.getElementById("editor");
-const parseBtn = document.getElementById("parseBtn");
+const previewBtn = document.getElementById("previewBtn");
 const clearBtn = document.getElementById("clearBtn");
 const parsedOutput = document.getElementById("parsedOutput");
+
+// Control what is showing
+let previewing = false;
 
 // Toolbar buttons
 const heading1 = document.getElementById("heading1");
@@ -13,7 +16,7 @@ let presentations = null;
 window.onload = async () => {
   // Get the default "presentation" from the server
   presentations = await getDefaultPresentation();
-
+  console.log(presentations);
   // Add the markdown from the default presentation to the editor
   editor.value = presentations[0].markdown;
 };
@@ -60,36 +63,54 @@ function insert(text, index) {
   editor.value = newString;
 }
 
-/***** PARSING *****/
-parseBtn.addEventListener("click", () => {
-  // Clear the slides if already existing
-  parsedOutput.innerHTML = "";
-  // Parse content of the editor
-  const parsed = marked.parse(editor.value);
+/***** PREVIEWING *****/
+previewBtn.addEventListener("click", () => {
+  if (previewing) {
+    // Remove the preview
+    parsedOutput.innerHTML = "";
 
-  // Split parsed content into slides
-  const segmentedOutput = parsed.split("<hr>");
+    // Change name of preview button
+    previewBtn.innerHTML = "Preview slides";
 
-  // Create slides for each segment
-  let index = 1; // Slide number
-  slideDeck = []; // Reset the slideDeck array
-  for (slide of segmentedOutput) {
-    // Create a new slide-div
-    const slideDiv = document.createElement("div");
-    slideDiv.classList.add("slide");
+    // No longer showing the preview
+    previewing = false;
+  } else {
+    // Clear the slides if already existing
+    parsedOutput.innerHTML = "";
 
-    // Add content to the slide
-    slideDiv.innerHTML = slide;
+    // Parse content of the editor
+    const parsed = marked.parse(editor.value);
 
-    // Add all the slide to the preview-output
-    parsedOutput.appendChild(slideDiv);
+    // Split parsed content into slides
+    const segmentedOutput = parsed.split("<hr>");
 
-    // Add the slide to the slidedeck-array
-    slideDeck.push({
+    // Create slides for each segment
+    let index = 1; // Slide number
+    slideDeck = []; // Reset the slideDeck array
+    for (slide of segmentedOutput) {
+      // Create a new slide-div
+      const slideDiv = document.createElement("div");
+      slideDiv.classList.add("slide");
+
+      // Add content to the slide
+      slideDiv.innerHTML = slide;
+
+      // Add all the slide to the preview-output
+      parsedOutput.appendChild(slideDiv);
+
+      // Add the slide to the slidedeck-array
+      slideDeck.push({
         index: index,
-        content: slide
-    });
-    index++;
+        content: slide,
+      });
+      index++;
+    }
+
+    // Change name of preview button
+    previewBtn.innerHTML = "Hide Preview";
+
+    // Now previewing is active
+    previewing = true;
   }
 
   console.log(JSON.stringify(slideDeck));
@@ -98,3 +119,5 @@ parseBtn.addEventListener("click", () => {
 clearBtn.addEventListener("click", () => {
   editor.value = "";
 });
+
+/***** NOTES FROM OTHER USERS *****/
