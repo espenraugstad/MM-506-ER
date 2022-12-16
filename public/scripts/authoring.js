@@ -5,6 +5,7 @@ const clearBtn = document.getElementById("clearBtn");
 const parsedOutput = document.getElementById("parsedOutput");
 const notesBtn = document.getElementById("notesBtn");
 const notesOutput = document.getElementById("notesOutput");
+const presenterBtn = document.getElementById('presenterBtn');
 
 // Control what is showing
 let previewing = false;
@@ -19,6 +20,7 @@ let presentations = null;
 window.onload = async () => {
   // Get the default "presentation" from the server
   presentations = await getDefaultPresentation();
+  console.log("Presentations:");
   console.log(presentations);
   // Add the markdown from the default presentation to the editor
   editor.value = presentations[0].markdown;
@@ -155,3 +157,13 @@ notesBtn.addEventListener("click", () => {
     showingNotes = true;
   }
 });
+
+
+/***** GO TO PRESENTER VIEW *****/
+presenterBtn.addEventListener('click', ()=>{
+  // Set current presentation id in local storage
+  localStorage.setItem('presentationId', presentations[0].presentation_id);
+  
+  // Go to the presenter view
+  window.location.href = "presenter.html";
+})
