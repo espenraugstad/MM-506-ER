@@ -15,8 +15,6 @@ server.get("/getDefault", (req, res) =>{
             res.json(data).end();
         }
     });
-   
-    
 });
 
 server.get("/getPresentation/:presentation_id", (req, res)=>{
@@ -29,9 +27,7 @@ server.get("/getPresentation/:presentation_id", (req, res)=>{
             let presentation = allPresentations.find(pres => parseInt(req.params.presentation_id) === pres.presentation_id);
             res.json(presentation).end();
         }
-    })
-    
-    
+    })   
 });
 
 server.listen(PORT, ()=>{

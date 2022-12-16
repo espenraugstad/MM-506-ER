@@ -1,14 +1,16 @@
 // HTML elements
 const manuscript = document.getElementById("manuscript");
 const slides = document.getElementById('slides');
+const startPresentation = document.getElementById('startPresentation');
 
 // Global variables
+let presentationId = -1;
 let slideDeck = []; // The slides
 let currentSlideIndex = 0; // Index of current slide
 
 window.onload = async () => {
   // Get the current presentation id from local storage
-  const presentationId = localStorage.getItem("presentationId");
+  presentationId = localStorage.getItem("presentationId");
 
   // Get the presentation from the server
   let currentPresentationData = await getPresentation(presentationId);
@@ -40,3 +42,12 @@ function generateSlidedeck(presentation){
 function previewSlide(index){
     slides.innerHTML = slideDeck[index];
 }
+
+/***** EVENT LISTENERS *****/
+startPresentation.addEventListener('click', ()=>{
+    console.log("Start");
+    if(presentationId !== -1){
+        window.open(`presentation.html?id=${presentationId}`);
+    }
+    
+});
