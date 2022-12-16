@@ -2,6 +2,8 @@
 const manuscript = document.getElementById("manuscript");
 const slides = document.getElementById('slides');
 const startPresentation = document.getElementById('startPresentation');
+const previousSlide = document.getElementById('previousSlide');
+const nextSlide = document.getElementById('nextSlide');
 
 // Global variables
 let presentationId = -1;
@@ -48,6 +50,30 @@ startPresentation.addEventListener('click', ()=>{
     console.log("Start");
     if(presentationId !== -1){
         window.open(`presentation.html?id=${presentationId}`);
+    } 
+});
+
+previousSlide.addEventListener('click', async ()=>{
+    console.log('Previous');
+    if(currentSlideIndex > 0){
+        currentSlideIndex--;
+    }
+
+    previewSlide(currentSlideIndex);
+
+    await fetch(`/changeSlide/${currentSlideIndex}`);
+})
+
+nextSlide.addEventListener('click', async ()=>{
+    console.log("Next");
+
+    if(currentSlideIndex < slideDeck.length-1){
+        currentSlideIndex++;
     }
     
+    previewSlide(currentSlideIndex);
+
+    // Send the index to the server so that it can be resent to the presentation
+    await fetch(`/changeSlide/${currentSlideIndex}`);
 });
+
