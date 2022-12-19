@@ -9,14 +9,14 @@
   <style>
     body {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
       justify-content: center;
       height: 100vh;
       font-family: sans-serif;
     }
     div{
-        font-size: 58pt;
+        
         background-color: #282A3A;
         color: white;
         padding: 1rem;
@@ -26,13 +26,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        margin: 1rem;
     }
-    p{
-        font-size: 16pt;
-    }
+
   </style>
   <body>
-    <div onclick="location.href='authoring.html'">+</div>
-    <p>New presentation</p>
+    <div onclick="location.href='authoring.html'">PRESENTER</div>
+    <div onclick="location.href='student.html'">STUDENT</div>
   </body>
 </html>

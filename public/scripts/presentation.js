@@ -42,7 +42,7 @@ const sse = new EventSource("/streamPresentation");
 sse.addEventListener('message', (message) => {
     let newIndex = message.data;
     console.log(newIndex.split("\""));
-    displaySlide(parseInt(newIndex.split("\"")[1]));
+    displaySlide(parseInt(newIndex.split("\"")[1    ]));
 });
 
 sse.addEventListener('open', ()=>{

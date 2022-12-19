@@ -28,10 +28,6 @@ function sse(req, res, next){
     next();
 }
 
-
-
-
-
 /***** ENDPOINTS *****/
 
 server.get("/getDefault", (req, res) =>{
@@ -64,6 +60,44 @@ server.get("/changeSlide/:slideIndex", sse, (req, res)=>{
         connection.sseSend(req.params.slideIndex);
     }
 }); 
+
+server.post("/saveNotes", (req, res) =>{
+   //console.log(req.body);
+
+    // Read entire file
+    let allPresentations = null;
+    fs.readFile("./presentations.json", "utf-8", (err, data)=>{
+        if(err){
+            console.log(err);
+        } else {
+            allPresentations = JSON.parse(data);
+            
+            // Find the index of the presentation with the id provided by the request object
+            let presentationIndex = allPresentations.findIndex(pres => parseInt(req.body.presentation) === pres.presentation_id);
+
+            //console.log(allPresentations[presentationIndex].notes);
+
+            // Find index of the notes
+            let notesIndex = allPresentations[presentationIndex].notes.findIndex(note => parseInt(note.user_id) === parseInt(req.body.user))
+            console.log(allPresentations[presentationIndex].notes[notesIndex]);
+
+            let newAllPresentations = allPresentations;
+            newAllPresentations[presentationIndex].notes[notesIndex].markdown = req.body.markdown;
+            console.log(newAllPresentations);   
+
+            // Write this to presentations
+            fs.writeFile("./presentations.json", JSON.stringify(newAllPresentations), err => {
+                if(err){
+                    console.log(err);   
+                    res.send(500).end();
+                } else {
+                    res.send(200).end();
+                }
+            })
+        }
+    })
+
+});
 
 server.get("/streamPresentation", sse, (req, res)=>{
     console.log("Streaming");

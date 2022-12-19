@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles/student.css">
+    <title>MM-506-ER</title>
+</head>
+<body>
+    <h1>Student view</h1>
+    <div #id="modules">
+        <h2>Modules</h2>
+        <section id="notes" class="module">
+            <h3>Notes</h3>
+            <p>Follow along and take notes for a presentation.</p>
+            <label for="presentation_id">Enter presentation code:</label>
+            <input id="presentation_id" type="text" />
+            <button id="take_notes">Go to presentation</button>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="./scripts/student.js"></script>
+</body>
+</html>
