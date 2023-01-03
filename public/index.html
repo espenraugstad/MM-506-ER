@@ -4,34 +4,21 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/styles.css" />
     <title>MM-506-ER</title>
   </head>
-  <style>
-    body {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      font-family: sans-serif;
-    }
-    div{
-        
-        background-color: #282A3A;
-        color: white;
-        padding: 1rem;
-        width: 100px;
-        height: 100px;
-        border-radius: 100px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 1rem;
-    }
-
-  </style>
+  <style></style>
   <body>
-    <div onclick="location.href='authoring.html'">PRESENTER</div>
-    <div onclick="location.href='student.html'">STUDENT</div>
+    <div class="center-container flex-col">
+      <div class="display-large">I am</div>
+      <div class="flex">
+        <div class="menu-button" onclick="location.href='login.html?role=presenter'">
+          Presenter
+        </div>
+        <div class="menu-button" onclick="location.href='login.html?role=student'">
+          Student
+        </div>
+      </div>
+    </div>
   </body>
 </html>

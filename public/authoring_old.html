@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/authoring.css" />
+    <title>MM-506-ER</title>
+  </head>
+  <body>
+    <h1>Testing Slide Creation From Markdown and More</h1>
+    <div id="authoring">
+      <div id="toolbar">
+        <button id="heading1">H1</button>
+      </div>
+      <textarea name="editor" id="editor" cols="30" rows="10"></textarea>
+      <div id="navButtons">
+        <div>
+          <button id="previewBtn">Preview Slides</button>
+          <button id="clearBtn">Clear</button>
+          <button id="notesBtn">Show notes</button>
+        </div>
+        <div>
+          <button id="presenterBtn">Go to presenter</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      Using the
+      <a href="https://github.com/markedjs/marked" target="_blank">Marked</a>
+      Markdown Parser
+    </div>
+
+    <div id="parsedOutput"></div>
+    <div id="notesOutput"></div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="./scripts/authoring.js"></script>
+  </body>
+</html>
