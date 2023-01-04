@@ -3,12 +3,15 @@ const loginHeader = document.getElementById("login-header");
 const loginBtn = document.getElementById("login-btn");
 const loginUser = document.getElementById("login-user");
 const loginPassword = document.getElementById("login-password");
+const errorMessage = document.getElementById('error-message');
 
 /***** GLOBAL VARIABLES *****/
 
 let role = null;
 
 window.onload = () => {
+  errorMessage.classList.add("hidden");
+  errorMessage.innerHTML = "";
   // Who is the login for?
   let urlParam = new URLSearchParams(document.location.search);
   role = urlParam.get("role");
@@ -49,9 +52,13 @@ loginBtn.addEventListener("click", async () => {
     localStorage.setItem("userId",  data.user_id);
 
     if (role === "presenter") {
+      errorMessage.classList.add("hidden");
+      errorMessage.innerHTML = "";
       location.href = "presenter-dashboard.html";
     }
   } else {
     console.log("User not found");
+    errorMessage.classList.remove("hidden");
+    errorMessage.innerHTML = "Incorrect username and/or password.";
   }
 });

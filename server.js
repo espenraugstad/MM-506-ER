@@ -42,7 +42,7 @@ server.post("/login", (req, res)=>{
             let database = JSON.parse(data);
             let users = database.users;
             console.log(users);
-            let currentUser = users.find(el => el.username === user);
+            let currentUser = users.find(el => (el.password === password && el.username === user) );
             console.log(currentUser);
             if(currentUser){
                 res.json(currentUser).end();
