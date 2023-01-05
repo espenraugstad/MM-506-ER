@@ -11,6 +11,7 @@ const authoringShowNotes = document.getElementById("authoring-show-notes");
 
 /***** GLOBAL VARIABLES *****/
 let currentPresentation = null;
+let currentPresentationNotes = null;
 let parsedPresentation = null;
 let showingNotes = false;
 
@@ -20,25 +21,45 @@ showNotesButton.addEventListener("click", () => {
     // Hide notes
     showingNotes = false;
     showNotesButton.innerHTML = "Show notes";
-    authoringShowNotes.classList.add("hidden")
+    authoringShowNotes.classList.add("hidden");
   } else {
     // Show notes
     showingNotes = true;
     showNotesButton.innerHTML = "Hide notes";
-    authoringShowNotes.classList.remove("hidden")
+    authoringShowNotes.classList.remove("hidden");
   }
 });
 
-authoringEditor.addEventListener("input", ()=>{
-  console.log("Input changed");
+authoringEditor.addEventListener("input", () => {
   // Update current presentation
   updatePresentationContent();
   updatePreview();
 });
 
+savePresentationButton.addEventListener("click", async ()=>{
+  console.log("Saving");
+  
+  let result = await fetch("/savePresentation",{
+    method: "post", 
+    headers: {
+      "content-type": "application/json"
+    },
+    body: JSON.stringify(currentPresentation)
+  });
+
+  console.log(result);
+});
+
 /***** FUNCTIONS *****/
 window.onload = async () => {
   await loadCurrentPresentation();
+  await getCurrentPresentationNotes();
+
+  // Update preview
+  updatePreview();
+
+  // Update notes
+  updateNotes();
 };
 
 async function loadCurrentPresentation() {
@@ -57,7 +78,6 @@ async function loadCurrentPresentation() {
   let results = await serverData.json();
 
   if (serverData.status === 200) {
-    console.log(results);
     currentPresentation = results;
 
     // Fill markdown in editor
@@ -65,12 +85,29 @@ async function loadCurrentPresentation() {
 
     // Parse presentation
     parsedPresentation = marked.parse(currentPresentation.markdown);
+  } else {
+    console.log("An error occured");
+    console.log(results);
+  }
+}
 
-    // Update preview
-    updatePreview();
+async function getCurrentPresentationNotes() {
+  // Get id from url
+  let url = new URLSearchParams(location.search);
+  let id = url.get("presentation");
 
-    // Update notes
-    updateNotes();
+  // Request presentation from server
+  let serverData = await fetch(`/getPresentationNotes/${id}`, {
+    methode: "get",
+    headers: {
+      "content-type": "application/json",
+      authorization: "Bearer " + localStorage.getItem("sillytoken"),
+    },
+  });
+  let results = await serverData.json();
+
+  if (serverData.status === 200) {
+    currentPresentationNotes = results;
   } else {
     console.log("An error occured");
     console.log(results);
@@ -81,12 +118,9 @@ function updatePreview() {
   previews.innerHTML = "";
   if (currentPresentation) {
     parsedPresentation = marked.parse(currentPresentation.markdown);
-    console.log("Exits");
     let slides = parsedPresentation.split("<hr>");
 
     for (let slide of slides) {
-      console.log(slide);
-
       // Div to contain the slide preview
       let slideDiv = document.createElement("div");
       slideDiv.classList.add("preview-slide");
@@ -105,7 +139,6 @@ function updatePreview() {
           slideDiv.innerHTML = `<div class="title-medium">&lt;This slide is empty&gt;<div>`;
         }
       } else {
-        console.log("What");
         slideDiv.innerHTML = `<div class="title-medium">&lt;This slide is empty&gt;<div>`;
       }
 
@@ -116,11 +149,11 @@ function updatePreview() {
   }
 }
 
-function updateNotes(){
-  if(currentPresentation){
-    let notesHtml = "<h1>Public Notes</h1><div class=\"flex flex-col full\">";
+function updateNotes() {
+  if (currentPresentationNotes) {
+    let notesHtml = '<h1>Public Notes</h1><div class="flex flex-col full">';
 
-    for(let note of currentPresentation.notes){
+    for (let note of currentPresentationNotes.notes) {
       let noteHtml = marked.parse(note.markdown);
       notesHtml += `<div class=\"secondary-container notes-username flex\">${note.user}<span class=\"material-symbols-outlined note-arrow\">
       arrow_drop_up
@@ -128,12 +161,11 @@ function updateNotes(){
       <div class=\"flex flex-col full note-content\">${noteHtml}</div>  
      `;
     }
-
-    notesHtml+="</div>";
+    notesHtml += "</div>";
     authoringShowNotes.innerHTML = notesHtml;
   }
 }
 
-function updatePresentationContent(){
+function updatePresentationContent() {
   currentPresentation.markdown = authoringEditor.value;
 }
