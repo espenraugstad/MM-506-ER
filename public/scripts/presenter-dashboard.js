@@ -2,6 +2,7 @@
 const presenterUsername = document.getElementById('presenter-username');
 const presentationList = document.getElementById('presentation-list');
 const logoutBtn = document.getElementById('logout-btn');
+const createPresentationButton = document.getElementById('create-presentation-button');
 
 /***** GLOBAL VARIABLES *****/
 let username = localStorage.getItem("user");
@@ -37,7 +38,6 @@ async function displayPresentations(){
        
         presentationList.appendChild(card);
     }  
-    console.log(presentations);
 }
 
 async function getPresentations(){
@@ -54,4 +54,8 @@ logoutBtn.addEventListener("click", ()=>{
     localStorage.removeItem("userId");
     location.replace("index.html");
     location.href="index.html";
+});
+
+createPresentationButton.addEventListener("click", ()=>{
+    console.log("Click");
 });

@@ -1,169 +1,100 @@
-// Html elements
-const editor = document.getElementById("editor");
-const previewBtn = document.getElementById("previewBtn");
-const clearBtn = document.getElementById("clearBtn");
-const parsedOutput = document.getElementById("parsedOutput");
-const notesBtn = document.getElementById("notesBtn");
-const notesOutput = document.getElementById("notesOutput");
-const presenterBtn = document.getElementById('presenterBtn');
+/****** HTML ELEMENTS ******/
+const previews = document.getElementById("previews");
+const authoringEditor = document.getElementById("authoring-editor");
+const savePresentationButton = document.getElementById(
+  "save-presentation-button"
+);
+const clearEditorButton = document.getElementById("clear-editor-button");
+const showNotesButton = document.getElementById("show-notes-button");
+const goToPresenterButton = document.getElementById("go-to-presenter-button");
 
-// Control what is showing
-let previewing = false;
+/***** GLOBAL VARIABLES *****/
+let currentPresentation = null;
+let parsedPresentation = null;
 let showingNotes = false;
 
-// Toolbar buttons
-const heading1 = document.getElementById("heading1");
+/***** EVENT HANDLERS *****/
+showNotesButton.addEventListener("click", ()=>{
+    if(showingNotes){
+        console.log("Hiding notes");
+        // Hide notes
+    } else {
+        console.log("Showing notes");
+        // Show notes
+    }
+});
 
-// All presentations for current user
-let presentations = null;
-
+/***** FUNCTIONS *****/
 window.onload = async () => {
-  // Get the default "presentation" from the server
-  presentations = await getDefaultPresentation();
-  console.log("Presentations:");
-  console.log(presentations);
-  // Add the markdown from the default presentation to the editor
-  editor.value = presentations[0].markdown;
+  await loadCurrentPresentation();
 };
 
-async function getDefaultPresentation() {
-  let response = await fetch("/getDefault");
-  let data = await response.json();
-  return JSON.parse(data);
-}
+async function loadCurrentPresentation() {
+  // Get id from url
+  let url = new URLSearchParams(location.search);
+  let id = url.get("presentation");
 
-// Array containing the slides
-let slideDeck = [];
+  // Request presentation from server
+  let serverData = await fetch(`/getPresentation/${id}`, {
+    methode: "get",
+    headers: {
+      "content-type": "application/json",
+      authorization: "Bearer " + localStorage.getItem("sillytoken"),
+    },
+  });
+  let results = await serverData.json();
 
-// Toolbar events
-heading1.addEventListener("click", () => {
-  console.log("h1");
-  // Get the index where the header should be inserted
-  let selectionStart = editor.selectionStart;
+  if (serverData.status === 200) {
+    console.log(results);
+    currentPresentation = results;
 
-  // Insert header 1 markdown
-  insert("# ", selectionStart);
+    // Fill markdown in editor
+    authoringEditor.value = currentPresentation.markdown;
 
-  // Return focus to textarea
-  editor.focus();
-});
+    // Parse presentation
+    parsedPresentation = marked.parse(currentPresentation.markdown);
 
-function insert(text, index) {
-  // Get the current value of the editor
-  let textContent = editor.value;
-
-  // Get the part of the editor to the left
-  let startString = textContent.slice(0, index);
-
-  // And to the right
-  let endString = textContent.slice(index);
-
-  // Remove any whitespace at the end of the endString
-  endString = endString.trimEnd();
-
-  // Create a new string with new text between left and right text
-  let newString = startString + text + endString;
-
-  // Replace content of the editor with the new string.
-  editor.value = newString;
-}
-
-/***** PREVIEWING *****/
-previewBtn.addEventListener("click", () => {
-  if (previewing) {
-    // Remove the preview
-    parsedOutput.innerHTML = "";
-
-    // Change name of preview button
-    previewBtn.innerHTML = "Preview slides";
-
-    // No longer showing the preview
-    previewing = false;
+    // Update preview
+    updatePreview();
   } else {
-    // Clear the slides if already existing
-    parsedOutput.innerHTML = "";
-
-    // Parse content of the editor
-    const parsed = marked.parse(editor.value);
-
-    // Split parsed content into slides
-    const segmentedOutput = parsed.split("<hr>");
-
-    // Create slides for each segment
-    let index = 1; // Slide number
-    slideDeck = []; // Reset the slideDeck array
-    for (slide of segmentedOutput) {
-      // Create a new slide-div
-      const slideDiv = document.createElement("div");
-      slideDiv.classList.add("slide");
-
-      // Add content to the slide
-      slideDiv.innerHTML = slide;
-
-      // Add all the slide to the preview-output
-      parsedOutput.appendChild(slideDiv);
-
-      // Add the slide to the slidedeck-array
-      slideDeck.push({
-        index: index,
-        content: slide,
-      });
-      index++;
-    }
-
-    // Change name of preview button
-    previewBtn.innerHTML = "Hide Preview";
-
-    // Now previewing is active
-    previewing = true;
+    console.log("An error occured");
+    console.log(results);
   }
+}
 
-  console.log(JSON.stringify(slideDeck));
-});
+function updatePreview() {
+  if (currentPresentation) {
+    console.log("Exits");
+    let slides = parsedPresentation.split("<hr>");
 
-clearBtn.addEventListener("click", () => {
-  editor.value = "";
-});
+    for (let slide of slides) {
+      console.log(slide);
 
-/***** NOTES FROM OTHER USERS *****/
-notesBtn.addEventListener("click", () => {
-  if (showingNotes) {
-    // Hide notes
-    notesOutput.innerHTML = "";
-    notesBtn.innerHTML = "Show notes";
-    showingNotes = false;
-  } else {
-    // For now, only working with default presentation
-    let currentPresentation = presentations[0];
+      // Div to contain the slide preview
+      let slideDiv = document.createElement("div");
+      slideDiv.classList.add("preview-slide");
 
-    // Loop through all notes, and for each (public) note, parse and then show.
-    for (let notes of currentPresentation.notes) {
-      if (notes.public) {
-        let parsedNotes = marked.parse(notes.markdown);
-
-        // Create a new div for the notes
-        let currentNotesDiv = document.createElement("div");
-        currentNotesDiv.classList.add("note");
-        // Add html
-        currentNotesDiv.innerHTML = `<h4>${notes.user} writes:</h4> ${parsedNotes}<hr >`;
-        // Add to notes-output
-        notesOutput.appendChild(currentNotesDiv);
+      // Parse the html of the slide to an HTML document
+      const domParser = new DOMParser();
+      let slideHtml = domParser.parseFromString(slide, "text/html");
+      // The first element will be in the preview
+      let previewText = "";
+      if (slideHtml.body.firstChild) {
+        let previewText = slideHtml.body.firstChild.textContent;
+        // Add the text to the slide (in a separate div?)
+        if (previewText !== "") {
+          slideDiv.innerHTML = `<div class="title-medium">${previewText}<div>`;
+        } else {
+          slideDiv.innerHTML = `<div class="title-medium">&lt;This slide is empty&gt;<div>`;
+        }
+      } else {
+        console.log("What")
+        slideDiv.innerHTML = `<div class="title-medium">&lt;This slide is empty&gt;<div>`;
       }
+
+      previews.appendChild(slideDiv);
     }
-
-    // Change name of notes button
-    notesBtn.innerHTML = "Hide notes";
-
-    showingNotes = true;
+  } else {
+    console.log("No presentation exists.");
   }
-});
-
-
-/***** GO TO PRESENTER VIEW *****/
-presenterBtn.addEventListener('click', ()=>{
-  // Set current presentation id in local storage
-  localStorage.setItem('presentationId', presentations[0].presentation_id);
-  
-  // Go to the presenter view
-  window.location.href = "presenter.html";
-})
+}

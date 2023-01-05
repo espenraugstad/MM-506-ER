@@ -1,5 +1,6 @@
 const fs = require("fs");
 const express = require("express");
+const { kMaxLength } = require("buffer");
 const server = express();
 const PORT = 8080;
 
@@ -30,7 +31,6 @@ function sse(req, res, next){
 
 /***** ENDPOINTS *****/
 server.post("/login", (req, res)=>{
-    console.log(req.body);
     let user = req.body.username;
     let password = req.body.password;
 
@@ -86,14 +86,34 @@ server.get("/getDefault", (req, res) =>{
 });
 
 server.get("/getPresentation/:presentation_id", (req, res)=>{
+    
+    // Authorization info
+    const credentials = req.headers.authorization.split(' ')[1];
+    const [username, password, role] = Buffer.from(credentials, 'base64').toString('UTF-8').split(":");
+
     fs.readFile("./presentations.json", "utf-8", (err, data) => {
         if(err){
             console.log(err);
+            res.status(500).json(err).end();
         } else {
-            let allPresentations = JSON.parse(data);
+            let presentationDb = JSON.parse(data);
+
+            let users = presentationDb.users;
+            // Locate the user with the given username and password
+            let currentUser = users.filter(u => (u.username === username && u.password === password))[0];
+            let currentUserId = currentUser.user_id;
+            
+            let allPresentations = presentationDb.presentations;
+
+
             // Find the presentation with the id provided by the request object
-            let presentation = allPresentations.find(pres => parseInt(req.params.presentation_id) === pres.presentation_id);
-            res.json(presentation).end();
+            let presentation = allPresentations.find(pres => (parseInt(req.params.presentation_id) === pres.presentation_id && pres.owner_id === currentUserId));
+            if(presentation){
+                res.status(200).json(presentation).end();
+            } else {
+                res.status(500).json({message: "Presentation not found"}).end();
+            }
+            
         }
     })   
 });

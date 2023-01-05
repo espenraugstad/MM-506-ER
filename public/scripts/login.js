@@ -51,6 +51,10 @@ loginBtn.addEventListener("click", async () => {
     localStorage.setItem("user", data.username);
     localStorage.setItem("userId",  data.user_id);
 
+    // Create a "sillytoken"
+    let sillytoken = window.btoa(`${username}:${password}:${role}`);
+    localStorage.setItem("sillytoken", sillytoken);
+
     if (role === "presenter") {
       errorMessage.classList.add("hidden");
       errorMessage.innerHTML = "";

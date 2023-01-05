@@ -4,30 +4,28 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="./styles/styles.css" />
     <title>MM-506-ER</title>
   </head>
   <body>
     <div class="container-sidebar">
-    <div class="side-menu flex-col">
+      <div class="side-menu flex-col">
+        <div class="side-profile flex-col">
+          <div class="profil-placeholder"></div>
+          <div class="display-small" id="presenter-username">Name</div>
+        </div>
 
-      <div class="side-profile flex-col">
-        <div class="profil-placeholder"></div>
-        <div class="display-small" id="presenter-username">Name</div>
+        <div class="display-small pointer" id="logout-btn">Logout</div>
       </div>
-      
-      <div class="display-small pointer" id="logout-btn">Logout</div>
-    
-    </div>
-    <div class="main-container flex-col">
+      <div class="main-container flex-col">
         <h1>Presenter Dashboard</h1>
         <div class="flex flex-between full">
-            <h2>My presentations</h2>
-            <button>+ Create new</button>
+          <h2>My presentations</h2>
+          <button id="create-presentation-button">+ Create new</button>
         </div>
         <div id="presentation-list" class="flex flex-wrap"></div>
+      </div>
     </div>
-</div>
-<script src="./scripts/presenter-dashboard.js"></script>
+    <script src="./scripts/presenter-dashboard.js"></script>
   </body>
 </html>
