@@ -7,6 +7,7 @@ const savePresentationButton = document.getElementById(
 const clearEditorButton = document.getElementById("clear-editor-button");
 const showNotesButton = document.getElementById("show-notes-button");
 const goToPresenterButton = document.getElementById("go-to-presenter-button");
+const authoringShowNotes = document.getElementById("authoring-show-notes");
 
 /***** GLOBAL VARIABLES *****/
 let currentPresentation = null;
@@ -14,14 +15,25 @@ let parsedPresentation = null;
 let showingNotes = false;
 
 /***** EVENT HANDLERS *****/
-showNotesButton.addEventListener("click", ()=>{
-    if(showingNotes){
-        console.log("Hiding notes");
-        // Hide notes
-    } else {
-        console.log("Showing notes");
-        // Show notes
-    }
+showNotesButton.addEventListener("click", () => {
+  if (showingNotes) {
+    // Hide notes
+    showingNotes = false;
+    showNotesButton.innerHTML = "Show notes";
+    authoringShowNotes.classList.add("hidden")
+  } else {
+    // Show notes
+    showingNotes = true;
+    showNotesButton.innerHTML = "Hide notes";
+    authoringShowNotes.classList.remove("hidden")
+  }
+});
+
+authoringEditor.addEventListener("input", ()=>{
+  console.log("Input changed");
+  // Update current presentation
+  updatePresentationContent();
+  updatePreview();
 });
 
 /***** FUNCTIONS *****/
@@ -56,6 +68,9 @@ async function loadCurrentPresentation() {
 
     // Update preview
     updatePreview();
+
+    // Update notes
+    updateNotes();
   } else {
     console.log("An error occured");
     console.log(results);
@@ -63,7 +78,9 @@ async function loadCurrentPresentation() {
 }
 
 function updatePreview() {
+  previews.innerHTML = "";
   if (currentPresentation) {
+    parsedPresentation = marked.parse(currentPresentation.markdown);
     console.log("Exits");
     let slides = parsedPresentation.split("<hr>");
 
@@ -88,7 +105,7 @@ function updatePreview() {
           slideDiv.innerHTML = `<div class="title-medium">&lt;This slide is empty&gt;<div>`;
         }
       } else {
-        console.log("What")
+        console.log("What");
         slideDiv.innerHTML = `<div class="title-medium">&lt;This slide is empty&gt;<div>`;
       }
 
@@ -97,4 +114,26 @@ function updatePreview() {
   } else {
     console.log("No presentation exists.");
   }
+}
+
+function updateNotes(){
+  if(currentPresentation){
+    let notesHtml = "<h1>Public Notes</h1><div class=\"flex flex-col full\">";
+
+    for(let note of currentPresentation.notes){
+      let noteHtml = marked.parse(note.markdown);
+      notesHtml += `<div class=\"secondary-container notes-username flex\">${note.user}<span class=\"material-symbols-outlined note-arrow\">
+      arrow_drop_up
+      </span></div>
+      <div class=\"flex flex-col full note-content\">${noteHtml}</div>  
+     `;
+    }
+
+    notesHtml+="</div>";
+    authoringShowNotes.innerHTML = notesHtml;
+  }
+}
+
+function updatePresentationContent(){
+  currentPresentation.markdown = authoringEditor.value;
 }

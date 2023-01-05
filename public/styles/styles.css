@@ -23,6 +23,7 @@ body {
   --col-on-surface: #001f2a;
 
   --font-display-large: 57px;
+  --font-title-large: 22px;
   --font-title-medium: 16px;
   --font-body-large: 16px;
 
@@ -292,4 +293,30 @@ label {
 
 .preview-slide img{
   max-width: 250px;
+}
+
+#authoring-show-notes{
+  border: 1px solid var(--col-outline);
+  border-radius: 10px;
+  margin-top: 2rem;
+}
+
+.notes-username{
+  font-size: var(--font-title-large);
+  padding: 1rem;
+  margin-top: 1rem;
+  position: relative;
+}
+
+.note-content{
+  padding: 0 1rem;
+}
+
+.note-arrow{
+  color: var(--col-background);
+  position: absolute;
+  left: 50%;
+  bottom: -1rem;
+  transform: translate(-50%, 0.3rem); 
+  font-size: 3rem;
 }
