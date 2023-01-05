@@ -1,11 +1,15 @@
+import { modalMessage, destroyModal } from "../modules/modalMessage.js";
+
 /****** HTML ELEMENTS ******/
-const previews = document.getElementById("previews");
+const previewBar = document.getElementById("previews");
+const presentationTitle = document.getElementById("presentation-title");
 const authoringEditor = document.getElementById("authoring-editor");
 const savePresentationButton = document.getElementById(
   "save-presentation-button"
 );
 const clearEditorButton = document.getElementById("clear-editor-button");
 const showNotesButton = document.getElementById("show-notes-button");
+const dashboardButton = document.getElementById("dashboard-button");
 const goToPresenterButton = document.getElementById("go-to-presenter-button");
 const authoringShowNotes = document.getElementById("authoring-show-notes");
 
@@ -14,8 +18,37 @@ let currentPresentation = null;
 let currentPresentationNotes = null;
 let parsedPresentation = null;
 let showingNotes = false;
+let isSaved = true;
 
 /***** EVENT HANDLERS *****/
+presentationTitle.addEventListener("blur", () => {
+  isSaved = false;
+  currentPresentation.presentation_title = presentationTitle.innerText;
+  /* if(currentPresentation.presentation_title !== presentationTitle.innerText){
+    console.log("Title changed");
+  } else {
+    console.log("Title remains");
+  } */
+
+  //presentationTitle.contentEditable = true;
+  //presentationTitle.focus();
+});
+
+authoringEditor.addEventListener("input",  () => {
+  // Update current presentation
+  isSaved = false;
+  updatePresentationContent();
+  updatePreview();
+});
+
+savePresentationButton.addEventListener("click", async () => {
+  await savePresentation();
+});
+
+clearEditorButton.addEventListener("click", () => {
+  console.log("Clear editor");
+});
+
 showNotesButton.addEventListener("click", () => {
   if (showingNotes) {
     // Hide notes
@@ -30,30 +63,44 @@ showNotesButton.addEventListener("click", () => {
   }
 });
 
-authoringEditor.addEventListener("input", () => {
-  // Update current presentation
-  updatePresentationContent();
-  updatePreview();
+dashboardButton.addEventListener("click", async () => {
+  if (isSaved) {
+    location.href = "./presenter-dashboard.html";
+  } else {
+    let action = await modalMessage(
+      "Save changes?",
+      "There are unsaved changes?\nSave changes?",
+      [
+        {
+          text: "Don't save",
+          returnValue: false,
+        },
+        {
+          text: "Save and exit",
+          returnValue: true,
+        },
+      ]
+    );
+    destroyModal();
+    if (action) {
+      console.log("Saving and exiting");
+      await savePresentation();
+      location.href = "./presenter-dashboard.html";
+    } else {
+      console.log("Cancelling");
+    }
+  }
+
 });
 
-savePresentationButton.addEventListener("click", async ()=>{
-  console.log("Saving");
-  
-  let result = await fetch("/savePresentation",{
-    method: "post", 
-    headers: {
-      "content-type": "application/json"
-    },
-    body: JSON.stringify(currentPresentation)
-  });
-
-  console.log(result);
+goToPresenterButton.addEventListener("click", () => {
+  console.log("Go to presenter");
 });
 
 /***** FUNCTIONS *****/
 window.onload = async () => {
-  await loadCurrentPresentation();
-  await getCurrentPresentationNotes();
+   await loadCurrentPresentation();
+   await getCurrentPresentationNotes();
 
   // Update preview
   updatePreview();
@@ -79,6 +126,9 @@ async function loadCurrentPresentation() {
 
   if (serverData.status === 200) {
     currentPresentation = results;
+
+    // Set title
+    presentationTitle.innerHTML = currentPresentation.presentation_title;
 
     // Fill markdown in editor
     authoringEditor.value = currentPresentation.markdown;
@@ -114,10 +164,12 @@ async function getCurrentPresentationNotes() {
   }
 }
 
-function updatePreview() {
-  previews.innerHTML = "";
+function updatePreview() {  
+  console.log("Updating pres");
+  previewBar.innerHTML = "";
   if (currentPresentation) {
-    parsedPresentation = marked.parse(currentPresentation.markdown);
+    
+    //parsedPresentation = marked.parse(currentPresentation.markdown);
     let slides = parsedPresentation.split("<hr>");
 
     for (let slide of slides) {
@@ -142,7 +194,7 @@ function updatePreview() {
         slideDiv.innerHTML = `<div class="title-medium">&lt;This slide is empty&gt;<div>`;
       }
 
-      previews.appendChild(slideDiv);
+      previewBar.appendChild(slideDiv);
     }
   } else {
     console.log("No presentation exists.");
@@ -168,4 +220,20 @@ function updateNotes() {
 
 function updatePresentationContent() {
   currentPresentation.markdown = authoringEditor.value;
+  parsedPresentation = marked.parse(currentPresentation.markdown);
+}
+
+async function savePresentation(){
+  console.log("Saving");
+  isSaved = true;
+  let result = await fetch("/savePresentation", {
+    method: "post",
+    headers: {
+      "content-type": "application/json",
+      "authorization": "Bearer " + localStorage.getItem("sillytoken")
+    },
+    body: JSON.stringify(currentPresentation),
+  });
+
+  console.log(result);
 }

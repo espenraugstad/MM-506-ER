@@ -20,6 +20,11 @@ body {
   --col-on-secondary-container: #001D33;
   --col-tertiary-container: #FFDEAB;
   --col-on-tertiary-container: #271900;
+
+  --col-error-container: #FFDAD6;
+  --col-on-error-container: #410002;
+
+
   --col-on-surface: #001f2a;
 
   --font-display-large: 57px;
@@ -261,9 +266,6 @@ label {
 
 #presentation-title {
   cursor: pointer;
-}
-
-#presentation-title h2 {
   margin-right: -0.85rem;
 }
 
@@ -319,4 +321,25 @@ label {
   bottom: -1rem;
   transform: translate(-50%, 0.3rem); 
   font-size: 3rem;
+}
+
+/****** Modal *****/
+.modal-message{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--col-error-container);
+  color: var(--col-on-error-container);
+  padding: 2rem;
+  max-width: 75vw;
+  border-radius: 10px;
+}
+
+.modal-button-area button{
+  margin: 1rem;
+}
+
+.fade{
+  filter: opacity(0.2);
 }

@@ -21,8 +21,8 @@
         <div id="previews" class="secondary-container flex-align full-height flex flex-col"></div>
       </div>
       <div class="main-container flex-col">
-        <div id="presentation-title" class="flex flex-center">
-          <h2>Presentation title</h2> 
+        <div  class="flex flex-center">
+          <h2 id="presentation-title" contenteditable="true"></h2> 
           <span class="material-symbols-outlined"> edit </span>
         </div>
 
@@ -34,7 +34,11 @@
                     <button id="clear-editor-button">Clear editor</button>
                     <button id="show-notes-button">Show notes</button>
                 </div>
-                <button id="go-to-presenter-button">Go to presenter</button>
+                <div>
+                  <button id="dashboard-button">Back to dashboard</button>
+                  <button id="go-to-presenter-button">Go to presenter</button>
+                </div>
+                
             </div>
         </div>
 
@@ -42,6 +46,6 @@
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="./scripts/authoring.js"></script>
+    <script src="./scripts/authoring.js" type="module"></script>
   </body>
 </html>
