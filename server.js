@@ -255,6 +255,49 @@ server.post("/savePresentation", (req, res) => {
   });
 });
 
+server.post("/deletePresentation", (req, res) =>{
+  console.log(req.body.presentationId);
+
+  let presentationDb = null;
+  fs.readFile("./presentations.json", "utf-8", (err, data) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json(err).end();
+    } else {
+      let presentationDb = JSON.parse(data);
+
+      let presentations = presentationDb.presentations;
+
+      // Filter out the presentation to delete
+      presentations = presentations.filter(p => p.presentation_id !== parseInt(req.body.presentationId));
+
+      console.log(presentations);
+
+      presentationDb.presentations = presentations;
+
+      // Rewrite db with the new files
+      fs.writeFile(
+        "./presentations.json",
+        JSON.stringify(presentationDb),
+        (err) => {
+          if (err) {
+            console.log(err);
+            res.status(500).json(err).end();
+          } else {
+            res
+              .status(200)
+              .json({ message: "Presentation deleted" })
+              .end();
+          }
+        }
+      );
+
+      //res.status(200).json({ notes: currentNotes }).end();
+    }
+  });
+});
+
+
 server.post("/saveNotes", (req, res) => {
   //console.log(req.body);
 

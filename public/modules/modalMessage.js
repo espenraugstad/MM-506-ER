@@ -1,6 +1,6 @@
 export function modalMessage(title, message, buttons) {
   return new Promise((res, rej) => {
-    console.log(buttons);
+    //console.log(buttons);
     let modal = document.createElement("div");
     modal.classList.add("modal-message");
     let modalHtml = `<h1>${title}</h1><p>${message}</p>`;
@@ -24,7 +24,7 @@ export function modalMessage(title, message, buttons) {
     // Fade everything else
     let fadeElements = document.querySelectorAll("body > :not(.modal-message)");
     //fadeElements.style.filter = "opacity(0.2)";
-    console.log(fadeElements);
+    //console.log(fadeElements);
     for (let el of fadeElements) {
       //el.style.filter = "opacity(0.2)";
       el.classList.add("fade");

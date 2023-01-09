@@ -29,30 +29,9 @@
         },
         {
             "presentation_id": 2,
-            "presentation_title": "Third Test",
+            "presentation_title": "Second Test",
             "owner_id": 0,
             "markdown": "# Welcome\nWelcome to what is currently called the \"Third Test\".\n\n---\n# Todo\n\n* Remember to update presentation title!\n   - Done :)",
-            "slides": []
-        },
-        {
-            "presentation_id": 3,
-            "presentation_title": "Untitled presentation",
-            "owner_id": 0,
-            "markdown": "",
-            "slides": []
-        },
-        {
-            "presentation_id": 4,
-            "presentation_title": "Untitled presentation",
-            "owner_id": 0,
-            "markdown": "",
-            "slides": []
-        },
-        {
-            "presentation_id": 5,
-            "presentation_title": "Untitled presentation",
-            "owner_id": 0,
-            "markdown": "",
             "slides": []
         },
         {
