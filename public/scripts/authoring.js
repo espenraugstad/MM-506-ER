@@ -121,7 +121,7 @@ dashboardButton.addEventListener("click", async () => {
 });
 
 goToPresenterButton.addEventListener("click", () => {
-  console.log("Go to presenter");
+  location.href="presenter.html";
 });
 
 /***** FUNCTIONS *****/
@@ -140,6 +140,9 @@ async function loadCurrentPresentation() {
   // Get id from url
   let url = new URLSearchParams(location.search);
   let id = url.get("presentation");
+
+  // Set it in local storage
+  localStorage.setItem("presentationId", id);
 
   // Request presentation from server
   let serverData = await fetch(`/getPresentation/${id}`, {
