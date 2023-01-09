@@ -42,7 +42,18 @@ authoringEditor.addEventListener("input",  () => {
 });
 
 savePresentationButton.addEventListener("click", async () => {
-  await savePresentation();
+  let status = await savePresentation();
+  let message = "";
+  if(status === 200){
+    message = "Presentation saved";
+  } else {
+    message = `Error ${status}`;
+  }
+  let saved = await modalMessage("Save", message, [{
+    text: "Ok",
+    returnValue: true
+  }]);
+  destroyModal();
 });
 
 clearEditorButton.addEventListener("click", () => {
@@ -72,7 +83,7 @@ dashboardButton.addEventListener("click", async () => {
       "There are unsaved changes?\nSave changes?",
       [
         {
-          text: "Don't save",
+          text: "Cancel",
           returnValue: false,
         },
         {
@@ -234,6 +245,7 @@ async function savePresentation(){
     },
     body: JSON.stringify(currentPresentation),
   });
+  console.log(result.status);
 
-  console.log(result);
+  return result.status;
 }
