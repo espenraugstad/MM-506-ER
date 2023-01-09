@@ -334,6 +334,9 @@ label {
   padding: 2rem;
   max-width: 75vw;
   border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .modal-button-area button{

@@ -56,7 +56,17 @@ savePresentationButton.addEventListener("click", async () => {
   destroyModal();
 });
 
-clearEditorButton.addEventListener("click", () => {
+clearEditorButton.addEventListener("click", async () => {
+  let clear = await modalMessage("Warning", "Are you sure you want to clear the editor? This action can not be undone!", [{text: "Cancel", returnValue: false}, {text: "Clear", returnValue: true}]);
+  destroyModal();
+  if(clear){
+    authoringEditor.value = "";
+    isSaved = false;
+    updatePresentationContent();
+    updatePreview();
+  } else {
+    return;
+  }
   console.log("Clear editor");
 });
 
@@ -84,21 +94,27 @@ dashboardButton.addEventListener("click", async () => {
       [
         {
           text: "Cancel",
-          returnValue: false,
+          returnValue: -1,
+        },
+        {
+          text: "Exit without saving",
+          returnValue: 0,
         },
         {
           text: "Save and exit",
-          returnValue: true,
+          returnValue: 1,
         },
       ]
     );
     destroyModal();
-    if (action) {
+    if (action === 1) {
       console.log("Saving and exiting");
       await savePresentation();
       location.href = "./presenter-dashboard.html";
+    } else if(action === 0){
+      location.href = "./presenter-dashboard.html";
     } else {
-      console.log("Cancelling");
+      return;
     }
   }
 
