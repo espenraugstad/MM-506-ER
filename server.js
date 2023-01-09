@@ -64,9 +64,9 @@ server.get("/userPresentations/:userId", (req, res) => {
     } else {
       let presentations = JSON.parse(data).presentations;
       //console.log(presentations);
-      for (let p of presentations) {
+      /*       for (let p of presentations) {
         console.log(typeof id);
-      }
+      } */
       // Filter presentations for the relevant user
       let returnPresentations = presentations.filter(
         (p) => p.owner_id === parseInt(id)
@@ -147,44 +147,112 @@ server.get("/getPresentationNotes/:presentation_id", (req, res) => {
         (n) => n.presentation_id === parseInt(presentationId)
       );
 
-      res.status(200).json({notes: currentNotes}).end();
+      res.status(200).json({ notes: currentNotes }).end();
+    }
+  });
+});
+
+server.post("/createPresentation", (req, res) => {
+  let token = req.headers.authorization.split(" ")[1];
+  let [username, password, role] = Buffer.from(token, "base64")
+    .toString("UTF-8")
+    .split(":");
+  /*   console.log(username);
+  console.log(password);
+  console.log(role); */
+  
+
+  // Read the database
+  let presentationDb = null;
+  fs.readFile("./presentations.json", "utf-8", (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      presentationDb = JSON.parse(data);
+
+      // Find all presentation ids
+      let presentations = presentationDb.presentations;
+      let highestId = 0;
+      for (p of presentations) {
+        console.log(p.presentation_id > highestId);
+        if (p.presentation_id > highestId) {
+          highestId = p.presentation_id;
+        }
+      }
+
+      // Create presentation
+      let newPresentation = {
+        "presentation_id": highestId + 1,
+        "presentation_title": "Untitled presentation",
+        "owner_id": parseInt(req.body.userId),
+        "markdown": "",
+        "slides": []
+      }
+
+      // Add presentation to db
+      presentationDb.presentations.push(newPresentation);
+
+      // Update db 
+      fs.writeFile(
+        "./presentations.json",
+        JSON.stringify(presentationDb),
+        (err) => {
+          if (err) {
+            console.log(err);
+            res.status(500).json(err).end();
+          } else {
+            res
+              .status(200)
+              .json({ message: "Presentation created", presentation_id: highestId+1 })
+              .end();
+          }
+        }
+      );
 
     }
   });
 });
 
-server.post("/savePresentation", (req, res)=>{
-   // console.log(req.body);
-    let currentPresentation = req.body;
-    
-    let presentationDb = null;
-    fs.readFile("./presentations.json", "utf-8", (err, data)=>{
-        if(err){
-            console.log(err);
-        } else {
-            presentationDb = JSON.parse(data);
-            /* console.log(presentationDb.presentations);
-            console.log(currentPresentation.presentation_id); */
-            // Find the relevant presentation in the db, and replace it with current presentation
-            let presentationIndex = presentationDb.presentations.findIndex((el) => el.presentation_id === currentPresentation.presentation_id);
-            //console.log(presentationIndex);
-            //console.log(presentationDb.presentations[presentationIndex]);
-            //console.log(currentPresentation);   
-            presentationDb.presentations[presentationIndex] = currentPresentation;
-            //console.log(presentationDb);
+server.post("/savePresentation", (req, res) => {
+  // console.log(req.body);
+  let currentPresentation = req.body;
 
-            // Write the updated file to the "database"
-            fs.writeFile("./presentations.json", JSON.stringify(presentationDb), (err) =>{
-                if(err){
-                    console.log(err);
-                    res.status(500).json(err).end();
-                } else {
-                    res.status(200).json({message: "Presentation saved successfully"}).end();
-                }
-            })
-            
+  let presentationDb = null;
+  fs.readFile("./presentations.json", "utf-8", (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      presentationDb = JSON.parse(data);
+      /* console.log(presentationDb.presentations);
+            console.log(currentPresentation.presentation_id); */
+      // Find the relevant presentation in the db, and replace it with current presentation
+      let presentationIndex = presentationDb.presentations.findIndex(
+        (el) => el.presentation_id === currentPresentation.presentation_id
+      );
+      //console.log(presentationIndex);
+      //console.log(presentationDb.presentations[presentationIndex]);
+      //console.log(currentPresentation);
+      presentationDb.presentations[presentationIndex] = currentPresentation;
+      //console.log(presentationDb);
+
+      // Write the updated file to the "database"
+      fs.writeFile(
+        "./presentations.json",
+        JSON.stringify(presentationDb),
+        (err) => {
+          if (err) {
+            console.log(err);
+            res.status(500).json(err).end();
+          } else {
+            res
+              .status(200)
+              .json({ message: "Presentation saved successfully" })
+              .end();
+          }
         }
-    });
+      );
+    }
+  });
 });
 
 server.post("/saveNotes", (req, res) => {
@@ -234,12 +302,12 @@ server.post("/saveNotes", (req, res) => {
 });
 
 server.get("/changeSlide/:slideIndex", sse, (req, res) => {
-    console.log(req.params.slideIndex);
-    // Send the new slide index to all connections
-    for (let connection of connections) {
-      connection.sseSend(req.params.slideIndex);
-    }
-  });
+  console.log(req.params.slideIndex);
+  // Send the new slide index to all connections
+  for (let connection of connections) {
+    connection.sseSend(req.params.slideIndex);
+  }
+});
 
 server.get("/streamPresentation", sse, (req, res) => {
   console.log("Streaming");

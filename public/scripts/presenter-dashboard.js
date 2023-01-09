@@ -47,7 +47,6 @@ async function displayPresentations() {
 async function getPresentations() {
   try {
     let data = await fetch(`/userPresentations/${userId}`);
-    console.log(data);
     let presentations = await data.json();
     return presentations;
   } catch (err) {
@@ -66,6 +65,26 @@ logoutBtn.addEventListener("click", () => {
   location.href = "index.html";
 });
 
-createPresentationButton.addEventListener("click", () => {
-  console.log("Click");
+createPresentationButton.addEventListener("click", async () => {
+  const url = "/createPresentation";
+
+  const sillytoken = localStorage.getItem("sillytoken");
+  
+  const config = {
+    method: "post",
+    headers: {
+      "content-type": "application/json",
+      "authorization": "Bearer " + sillytoken
+    },
+    body: JSON.stringify({userId: localStorage.getItem("userId")})
+  }
+
+  let result = await fetch(url, config);
+  let data = await result.json();
+  if(result.status === 200){
+    location.href = `authoring.html?presentation=${data.presentation_id}`;
+  } else {
+    console.log(result.status);
+  }
+  console.log(data);
 });
