@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <title>MM-506-ER</title>
   </head>
-  <body>
+  <body class="full-height">
     <div class="container-sidebar">
       <div class="side-menu flex-col">
         <div class="side-profile flex-col">
@@ -20,14 +20,18 @@
       </div>
       <div class="main-container flex-col">
         <h1>Presenter Dashboard</h1>
-        <div class="flex flex-between full">
+        <div class="flex flex-between full underline">
           <h2>My presentations</h2>
           <button id="create-presentation-button">+ Create new</button>
         </div>
-        <div id="presentation-list" class="flex flex-wrap">
+        <div id="presentation-list" class="flex flex-col">
           <span class="material-symbols-outlined">
             delete
             </span>
+        </div>
+        <div>
+          <button id="edit-presentation" class="dashboard--action btn--inactive">Edit</button>
+          <button id="present" class="dashboard--action btn--inactive">Present</button>
         </div>
       </div>
     </div>
