@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./styles/styles.css" />
     <title>MM-506-ER</title>
   </head>
-  <body class="flex flex-col flex-align">
+  <body class="flex flex-col flex-align only-vh">
     <h1>Presenter View</h1>
     <div class="presenter-preview flex flex-align">
       <div class="nav--preview preview--small preview--empty" id="previous-preview">No slide</div>
@@ -18,6 +18,10 @@
       <button id="previous">Previous Slide</button>
       <button id="start">Start presentation</button>
       <button id="next">Next slide</button>
+    </div>
+    <div class="presenter-nav-back">
+      <button id="to-author">Return to editor</button>
+      <button id="to-dashboard">Return to dashboard</button>
     </div>
     <div class="presenter-script"></div>
 

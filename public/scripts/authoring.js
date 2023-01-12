@@ -120,8 +120,40 @@ dashboardButton.addEventListener("click", async () => {
 
 });
 
-goToPresenterButton.addEventListener("click", () => {
-  location.href="presenter.html";
+goToPresenterButton.addEventListener("click", async () => {
+  if(!isSaved){
+    let action = await modalMessage(
+      "Save changes?",
+      "There are unsaved changes?\nSave changes?",
+      [
+        {
+          text: "Cancel",
+          returnValue: -1,
+        },
+        {
+          text: "Discard changes",
+          returnValue: 0,
+        },
+        {
+          text: "Save and continue",
+          returnValue: 1,
+        },
+      ])
+    if (action === -1){
+      destroyModal();
+    } else if (action === 0){
+      destroyModal();
+      location.href="presenter.html";
+    } else {
+      await savePresentation();
+      destroyModal();
+      location.href="presenter.html"; 
+    }
+    
+  } else {
+    location.href="presenter.html";
+  }
+  
 });
 
 /***** FUNCTIONS *****/

@@ -399,4 +399,9 @@ label {
   border-radius: 5px;
   min-width: 50vw;
   margin: 1rem 0;
+  overflow-y: auto;
+}
+
+.only-vh{
+  max-height: 100vh;
 }
