@@ -1,8 +1,9 @@
 /***** HTML ELEMENTS *****/
+const info = document.getElementById("info");
 const slides = document.getElementById("slides");
 
 /***** GLOBAL VARIABLES *****/
-let presentationKey = -1;
+let presentationId = -1;
 let slideDeck = []; // The slides
 let currentSlideIndex = 0; // Index of current slide
 
@@ -11,29 +12,21 @@ window.onload = async () => {
   // Get the current presentation id from the url
   //presentationId = localStorage.getItem("presentationId");
   let urlParam = new URLSearchParams(document.location.search);
-  presentationKey = urlParam.get("key");
+  presentationId = urlParam.get("id");
 
   // Get the presentation from the server
-  let currentPresentationData = await getPresentationByKey(presentationKey);
-  console.log(currentPresentationData);
-  if (currentPresentationData.status === 200) {
-    let data = await currentPresentationData.json();
-    let currentPresentation = data.presentation;
+  let currentPresentationData = await getPresentation(presentationId);
+  let currentPresentation = await currentPresentationData.json();
 
-    console.log(currentPresentation);
-    // Generate slidedeck
-    generateSlidedeck(currentPresentation);
-    console.log(slideDeck);
+  // Generate slidedeck
+  //generateSlidedeck(currentPresentation);
 
-    // Diplay the first slide
-    displaySlide(currentSlideIndex);
-  } else {
-    console.log("Error getting presentation");
-  }
+  // Diplay the first slide
+  //displaySlide(currentSlideIndex);
 };
 
-async function getPresentationByKey(key) {
-  return await fetch(`/getPresentationByKey/${key}`);
+async function getPresentation(id) {
+  return await fetch(`/getPresentation/${id}`);
 }
 
 function generateSlidedeck(presentation) {
@@ -47,9 +40,8 @@ function displaySlide(index) {
 // Listening for slide changes from the server
 const sse = new EventSource("/streamPresentation");
 sse.addEventListener("message", (message) => {
-  //console.log(message);
   let newIndex = message.data;
-  console.log(newIndex.split('"')[1]);
+  console.log(newIndex.split('"'));
   displaySlide(parseInt(newIndex.split('"')[1]));
 });
 
@@ -59,5 +51,4 @@ sse.addEventListener("open", () => {
 
 sse.addEventListener("error", () => {
   console.log("Error est conn");
-  console.log(err);
 });

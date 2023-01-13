@@ -6,8 +6,8 @@ const scriptDiv = document.querySelector(".presenter-script");
 const previous = document.getElementById("previous");
 const start = document.getElementById("start");
 const next = document.getElementById("next");
-const toAuthor = document.getElementById('to-author');
-const toDashboard = document.getElementById('to-dashboard');
+const toAuthor = document.getElementById("to-author");
+const toDashboard = document.getElementById("to-dashboard");
 
 /****** GLOBAL VARIABLES ******/
 const presentationId = localStorage.getItem("presentationId");
@@ -17,37 +17,66 @@ let currentSlide = 0;
 let isActive = false;
 
 /****** EVENT LISTENERS ******/
-toAuthor.addEventListener("click", ()=> location.href=`authoring.html?presentation=${localStorage.getItem("presentationId")}`);
-toDashboard.addEventListener("click", ()=> location.href="presenter-dashboard.html");
+toAuthor.addEventListener(
+  "click",
+  () =>
+    (location.href = `authoring.html?presentation=${localStorage.getItem(
+      "presentationId"
+    )}`)
+);
+toDashboard.addEventListener(
+  "click",
+  () => (location.href = "presenter-dashboard.html")
+);
 
-previous.addEventListener("click", () => {
+previous.addEventListener("click", async () => {
   // Update slide preview
-  if(currentSlide > 0){
+  if (currentSlide > 0) {
     currentSlide -= 1;
     previewSlides();
   } else {
     console.log("This is the start of the presentation");
   }
   // Notify server that slide has been changed
+  await fetch(`/changeSlide/${currentSlide}`);
 });
 
-start.addEventListener("click", () => {
+start.addEventListener("click", async () => {
   if (!isActive) {
     start.innerHTML = "Stop presentation";
     isActive = true;
+    let activeKey = "";
+    // Send to server to activate and generate key
+    let serverResponse = await fetch("/startPresentation", {
+      method: "post",
+      headers: {
+        "content-type": "application/json", // Add auth if necessary
+      },
+      body: JSON.stringify({
+        id: presentationId,
+      }),
+    });
+    if (serverResponse.status === 200) {
+      let data = await serverResponse.json();
+      console.log(data.key);
+      activeKey = data.key;
+      localStorage.setItem("activePresentationKey", activeKey);
+    } else {
+      console.log(serverResponse);
+    }
     console.log("Presentation is running");
-
+    window.open(`presentation.html?key=${activeKey}`);
     // Open presentation in new window
   } else {
     start.innerHTML = "Start presentation";
     isActive = false;
     console.log("Presentation has stopped");
 
-    // Not sure how this will work
+    // Remove current presentation from active on server
   }
 });
 
-next.addEventListener("click", () => {
+next.addEventListener("click", async () => {
   // Update slide preview
   if (currentSlide + 1 < slides.length) {
     currentSlide += 1;
@@ -57,6 +86,7 @@ next.addEventListener("click", () => {
   }
 
   // Notify server that slide has been changed
+  await fetch(`/changeSlide/${currentSlide}`);
 });
 /****** FUNCTIONS ******/
 window.onload = async () => {
@@ -114,12 +144,11 @@ function previewSlides() {
     } else {
       setPreviousSlide(currentSlide - 1);
       setCurrentSlide(currentSlide);
-      if(currentSlide === slides.length - 1){
+      if (currentSlide === slides.length - 1) {
         setNextSlide(-1);
       } else {
         setNextSlide(currentSlide + 1);
       }
-      
     }
   }
 }

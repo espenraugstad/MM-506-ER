@@ -28,6 +28,17 @@ function sse(req, res, next) {
   next();
 }
 
+/***** HELPER FUNCTIONS *****/
+function generateKey() {
+  const chars = "0123456789";
+  let ran = "";
+  for (let i = 0; i < 5; i++) {
+    ran += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  return ran;
+}
+
 /***** ENDPOINTS *****/
 server.post("/login", (req, res) => {
   console.log(req.body);
@@ -44,7 +55,8 @@ server.post("/login", (req, res) => {
       let users = database.users;
       console.log(users);
       let currentUser = users.find(
-        (el) => el.password === password && el.username === user && el.role === role
+        (el) =>
+          el.password === password && el.username === user && el.role === role
       );
       console.log(currentUser);
       if (currentUser) {
@@ -153,6 +165,38 @@ server.get("/getPresentationNotes/:presentation_id", (req, res) => {
   });
 });
 
+server.get("/getPresentationByKey/:key", (req, res) => {
+  let key = req.params.key;
+  console.log(key);
+
+  fs.readFile("./presentations.json", "utf-8", (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      let db = JSON.parse(data);
+      let active = db.active;
+
+      // See if current presentation is active
+      let activeIndex = active.findIndex((el) => el.key === key);
+      if (activeIndex > -1) {
+        console.log("Presentation is active");
+        // Get presentation id
+        let id = active[activeIndex].id;
+
+        // Get the presentation
+        let p = db.presentations.find(
+          (el) => el.presentation_id === parseInt(id)
+        );
+
+        res.status(200).json({ presentation: p }).end();
+      } else {
+        console.log("Presentation is not active");
+        res.status(404).end();
+      }
+    }
+  });
+});
+
 server.post("/createPresentation", (req, res) => {
   let token = req.headers.authorization.split(" ")[1];
   let [username, password, role] = Buffer.from(token, "base64")
@@ -161,7 +205,6 @@ server.post("/createPresentation", (req, res) => {
   /*   console.log(username);
   console.log(password);
   console.log(role); */
-  
 
   // Read the database
   let presentationDb = null;
@@ -183,17 +226,17 @@ server.post("/createPresentation", (req, res) => {
 
       // Create presentation
       let newPresentation = {
-        "presentation_id": highestId + 1,
-        "presentation_title": "Untitled presentation",
-        "owner_id": parseInt(req.body.userId),
-        "markdown": "",
-        "slides": []
-      }
+        presentation_id: highestId + 1,
+        presentation_title: "Untitled presentation",
+        owner_id: parseInt(req.body.userId),
+        markdown: "",
+        slides: [],
+      };
 
       // Add presentation to db
       presentationDb.presentations.push(newPresentation);
 
-      // Update db 
+      // Update db
       fs.writeFile(
         "./presentations.json",
         JSON.stringify(presentationDb),
@@ -204,12 +247,14 @@ server.post("/createPresentation", (req, res) => {
           } else {
             res
               .status(200)
-              .json({ message: "Presentation created", presentation_id: highestId+1 })
+              .json({
+                message: "Presentation created",
+                presentation_id: highestId + 1,
+              })
               .end();
           }
         }
       );
-
     }
   });
 });
@@ -256,7 +301,7 @@ server.post("/savePresentation", (req, res) => {
   });
 });
 
-server.post("/deletePresentation", (req, res) =>{
+server.post("/deletePresentation", (req, res) => {
   console.log(req.body.presentationId);
 
   let presentationDb = null;
@@ -270,7 +315,9 @@ server.post("/deletePresentation", (req, res) =>{
       let presentations = presentationDb.presentations;
 
       // Filter out the presentation to delete
-      presentations = presentations.filter(p => p.presentation_id !== parseInt(req.body.presentationId));
+      presentations = presentations.filter(
+        (p) => p.presentation_id !== parseInt(req.body.presentationId)
+      );
 
       console.log(presentations);
 
@@ -285,10 +332,7 @@ server.post("/deletePresentation", (req, res) =>{
             console.log(err);
             res.status(500).json(err).end();
           } else {
-            res
-              .status(200)
-              .json({ message: "Presentation deleted" })
-              .end();
+            res.status(200).json({ message: "Presentation deleted" }).end();
           }
         }
       );
@@ -297,7 +341,6 @@ server.post("/deletePresentation", (req, res) =>{
     }
   });
 });
-
 
 server.post("/saveNotes", (req, res) => {
   //console.log(req.body);
@@ -345,7 +388,39 @@ server.post("/saveNotes", (req, res) => {
   });
 });
 
+server.post("/startPresentation", (req, res) => {
+  console.log(req.body);
+  const id = req.body.id;
+
+  fs.readFile("./presentations.json", "utf-8", (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      let db = JSON.parse(data);
+      console.log(db);
+      let active = db.active;
+      console.log(active);
+      let key = generateKey();
+      while (active.findIndex((el) => el.key === key) !== -1) {
+        key = generateKey();
+      }
+      db.active.push({ key: key, id: id });
+
+      // Rewrite db
+      fs.writeFile("./presentations.json", JSON.stringify(db), (err) => {
+        if (err) {
+          console.log(err);
+          res.send(500).end();
+        } else {
+          res.status(200).json({ key: key }).end();
+        }
+      });
+    }
+  });
+});
+
 server.get("/changeSlide/:slideIndex", sse, (req, res) => {
+  console.log("Changing slide");
   console.log(req.params.slideIndex);
   // Send the new slide index to all connections
   for (let connection of connections) {
