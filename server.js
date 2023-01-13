@@ -1,6 +1,5 @@
 const fs = require("fs");
 const express = require("express");
-const { kMaxLength } = require("buffer");
 const server = express();
 const PORT = 8080;
 
@@ -31,8 +30,10 @@ function sse(req, res, next) {
 
 /***** ENDPOINTS *****/
 server.post("/login", (req, res) => {
+  console.log(req.body);
   let user = req.body.username;
   let password = req.body.password;
+  let role = req.body.role;
 
   // Check if user exists
   fs.readFile("./presentations.json", "utf-8", (err, data) => {
@@ -43,7 +44,7 @@ server.post("/login", (req, res) => {
       let users = database.users;
       console.log(users);
       let currentUser = users.find(
-        (el) => el.password === password && el.username === user
+        (el) => el.password === password && el.username === user && el.role === role
       );
       console.log(currentUser);
       if (currentUser) {
