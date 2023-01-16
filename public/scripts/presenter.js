@@ -34,11 +34,11 @@ previous.addEventListener("click", async () => {
   if (currentSlide > 0) {
     currentSlide -= 1;
     previewSlides();
+    // Notify server that slide has been changed
+    await fetch(`/changeSlide/${currentSlide}`);
   } else {
     console.log("This is the start of the presentation");
   }
-  // Notify server that slide has been changed
-  await fetch(`/changeSlide/${currentSlide}`);
 });
 
 start.addEventListener("click", async () => {
@@ -81,12 +81,11 @@ next.addEventListener("click", async () => {
   if (currentSlide + 1 < slides.length) {
     currentSlide += 1;
     previewSlides();
+    // Notify server that slide has been changed
+    await fetch(`/changeSlide/${currentSlide}`);
   } else {
     console.log("You have reached the end of the slide deck");
   }
-
-  // Notify server that slide has been changed
-  await fetch(`/changeSlide/${currentSlide}`);
 });
 /****** FUNCTIONS ******/
 window.onload = async () => {

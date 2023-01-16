@@ -8,6 +8,7 @@ server.use(express.static("public"));
 
 /***** SERVER VARIABLES *****/
 let connections = []; // Keeping track of connections
+let slideIndex = 0;
 
 /***** MIDDLEWARE *****/
 function sse(req, res, next) {
@@ -15,7 +16,7 @@ function sse(req, res, next) {
     res.set({
       "Cache-Control": "no-cache",
       "Content-Type": "text/event-stream",
-      Connection: "keep-alive",
+      "Connection": "keep-alive",
     });
     res.flushHeaders();
   };
@@ -119,6 +120,7 @@ server.get("/getPresentation/:presentation_id", (req, res) => {
       let currentUser = users.filter(
         (u) => u.username === username && u.password === password
       )[0];
+      console.log(currentUser);
       let currentUserId = currentUser.user_id;
 
       let allPresentations = presentationDb.presentations;
@@ -419,20 +421,51 @@ server.post("/startPresentation", (req, res) => {
   });
 });
 
-server.get("/changeSlide/:slideIndex", sse, (req, res) => {
+server.get("/changeSlide/:slideIndex", (req, res) => {
+/*   console.log("Changing slide");
+  console.log(req.params.slideIndex);
+  // Send the new slide index to all connections
+  for (let connection of connections) {
+    connection.write(`data: ${req.params.slideIndex}\n\n`);
+  } */
+  slideIndex = parseInt(req.params.slideIndex); 
+  res.end();
+});
+
+server.get("/slideIndex", (req, res)=>{
+  res.json({"index": slideIndex}).end();
+});
+
+
+/* server.get("/changeSlide/:slideIndex", (req, res) => {
   console.log("Changing slide");
   console.log(req.params.slideIndex);
   // Send the new slide index to all connections
   for (let connection of connections) {
-    connection.sseSend(req.params.slideIndex);
+    connection.write(`data: ${req.params.slideIndex}\n\n`);
   }
-});
+}); */
 
-server.get("/streamPresentation", sse, (req, res) => {
+/* server.get("/streamPresentation", sse, (req, res) => {
   console.log("Streaming");
   res.sseSetup();
   //res.sseSend("test");
   connections.push(res);
+}); */
+
+server.get("/streamPresentation", (req, res) => {
+  console.log("Streaming");
+  
+  const headers = {
+    "Content-Type": "text/event-stream",
+    Connection: "keep-alive",
+  }
+
+  res.writeHead(200, headers);
+
+  // Add connection to array
+  connections.push(res);
+
 });
 
 server.listen(PORT, () => {

@@ -30,6 +30,9 @@ window.onload = async () => {
   } else {
     console.log("Error getting presentation");
   }
+
+  // Listen for slide changes
+  await listen();
 };
 
 async function getPresentationByKey(key) {
@@ -44,20 +47,40 @@ function displaySlide(index) {
   slides.innerHTML = slideDeck[index];
 }
 
-// Listening for slide changes from the server
-const sse = new EventSource("/streamPresentation");
-sse.addEventListener("message", (message) => {
-  //console.log(message);
-  let newIndex = message.data;
-  console.log(newIndex.split('"')[1]);
-  displaySlide(parseInt(newIndex.split('"')[1]));
-});
+async function listen(){
+  console.log("Listening");
+  let result = await fetch("/slideIndex");
+  let data = await result.json();
+  console.log(data);
+  if(data.index !== currentSlideIndex){
+    currentSlideIndex = data.index;
+    displaySlide(currentSlideIndex);
+  }
+  setTimeout(listen, 1000);
+}
 
-sse.addEventListener("open", () => {
-  console.log("Connection open");
-});
+/* function listen() {
+  // Listening for slide changes from the server
+  let sse = new EventSource("/streamPresentation");
+  sse.addEventListener("message", (message) => {
+    console.log(message);
+    let newIndex = message.data;
+    //console.log(newIndex.split('"')[1]);
+    //displaySlide(parseInt(newIndex.split('"')[1]));
+    displaySlide(parseInt(message.data));
+  });
 
-sse.addEventListener("error", () => {
-  console.log("Error est conn");
-  console.log(err);
-});
+  sse.addEventListener("open", () => {
+    console.log("Connection open");
+  });
+
+  sse.addEventListener("error", (err) => {
+    console.log("Error est conn");
+    console.log(err);
+    sse.close();
+    // Retry connecting:
+    console.log("Retrying connection");
+    setTimeout(listen, 1000);
+  });
+} */
+
