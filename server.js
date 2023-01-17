@@ -1,5 +1,7 @@
 const fs = require("fs");
+const Storage = require("./modules/db.js");
 const express = require("express");
+const { off } = require("process");
 const server = express();
 const PORT = 8080;
 
@@ -7,6 +9,7 @@ server.use(express.json());
 server.use(express.static("public"));
 
 /***** SERVER VARIABLES *****/
+const db = new Storage();
 let connections = []; // Keeping track of connections
 let slideIndex = 0;
 
@@ -16,7 +19,7 @@ function sse(req, res, next) {
     res.set({
       "Cache-Control": "no-cache",
       "Content-Type": "text/event-stream",
-      "Connection": "keep-alive",
+      Connection: "keep-alive",
     });
     res.flushHeaders();
   };
@@ -140,6 +143,19 @@ server.get("/getPresentation/:presentation_id", (req, res) => {
   });
 });
 
+server.get("/studentPresentations/:studentId", async (req, res) => {
+  console.log(req.params.studentId);
+  let data = await db.getStudentPresentations(req.params.studentId);
+  console.log(data);
+  if (data) {
+    res.status(200).json(data).end();
+  } else {
+    res.status(500).end();
+  }
+  //let dta = await db.getDatabase();
+  //console.log(dta);
+});
+
 server.get("/getPresentationNotes/:presentation_id", (req, res) => {
   // Authorization info
   const credentials = req.headers.authorization.split(" ")[1];
@@ -199,7 +215,22 @@ server.get("/getPresentationByKey/:key", (req, res) => {
   });
 });
 
-server.post("/createPresentation", (req, res) => {
+server.post("/createPresentation", async (req, res) => {
+  let token = req.headers.authorization.split(" ")[1];
+  let [username, password, role] = Buffer.from(token, "base64")
+    .toString("UTF-8")
+    .split(":");
+
+    let result = await db.createPresentation(req.body.userId);
+    console.log(result);
+    if(result !== -1){
+      res.status(200).json({msg: "Success", id: result}).end();
+    } else {
+      res.status(500).end();
+    }
+});
+
+server.post("/oldCreatePresentation", (req, res) => {
   let token = req.headers.authorization.split(" ")[1];
   let [username, password, role] = Buffer.from(token, "base64")
     .toString("UTF-8")
@@ -219,7 +250,7 @@ server.post("/createPresentation", (req, res) => {
       // Find all presentation ids
       let presentations = presentationDb.presentations;
       let highestId = 0;
-      for (p of presentations) {
+      for (let p of presentations) {
         console.log(p.presentation_id > highestId);
         if (p.presentation_id > highestId) {
           highestId = p.presentation_id;
@@ -421,21 +452,39 @@ server.post("/startPresentation", (req, res) => {
   });
 });
 
+server.post("/stopPresentation", async (req, res) =>{
+  console.log(req.body);
+  let id = req.body.id;
+  let key = req.body.key;
+  try{
+    let result = await db.stopPresentation(id, key);
+    res.status(result).end();
+  } catch (err){
+    console.log("Unable to stop presentation");
+    console.log(err);
+  }
+  
+  if(removed){
+    res.status(200).end();
+  } else {
+    res.status(500).end();
+  }
+});
+
 server.get("/changeSlide/:slideIndex", (req, res) => {
-/*   console.log("Changing slide");
+  /*   console.log("Changing slide");
   console.log(req.params.slideIndex);
   // Send the new slide index to all connections
   for (let connection of connections) {
     connection.write(`data: ${req.params.slideIndex}\n\n`);
   } */
-  slideIndex = parseInt(req.params.slideIndex); 
+  slideIndex = parseInt(req.params.slideIndex);
   res.end();
 });
 
-server.get("/slideIndex", (req, res)=>{
-  res.json({"index": slideIndex}).end();
+server.get("/slideIndex", (req, res) => {
+  res.json({ index: slideIndex }).end();
 });
-
 
 /* server.get("/changeSlide/:slideIndex", (req, res) => {
   console.log("Changing slide");
@@ -455,17 +504,16 @@ server.get("/slideIndex", (req, res)=>{
 
 server.get("/streamPresentation", (req, res) => {
   console.log("Streaming");
-  
+
   const headers = {
     "Content-Type": "text/event-stream",
     Connection: "keep-alive",
-  }
+  };
 
   res.writeHead(200, headers);
 
   // Add connection to array
   connections.push(res);
-
 });
 
 server.listen(PORT, () => {

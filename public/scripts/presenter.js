@@ -6,6 +6,7 @@ const scriptDiv = document.querySelector(".presenter-script");
 const previous = document.getElementById("previous");
 const start = document.getElementById("start");
 const next = document.getElementById("next");
+const activeKeyDiv = document.getElementById('active-key');
 const toAuthor = document.getElementById("to-author");
 const toDashboard = document.getElementById("to-dashboard");
 
@@ -61,6 +62,7 @@ start.addEventListener("click", async () => {
       console.log(data.key);
       activeKey = data.key;
       localStorage.setItem("activePresentationKey", activeKey);
+      activeKeyDiv.innerHTML = activeKey;
     } else {
       console.log(serverResponse);
     }
@@ -73,6 +75,24 @@ start.addEventListener("click", async () => {
     console.log("Presentation has stopped");
 
     // Remove current presentation from active on server
+    let removeActiveRes = await fetch(`/stopPresentation`,{
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        id: presentationId,
+        key: localStorage.getItem("activePresentationKey")
+      })
+    });
+    
+    if(removeActiveRes.status === 200 || removeActiveRes.status === 404){
+      localStorage.removeItem("activePresentationKey");
+      activeKeyDiv.innerHTML = "";
+    } else {
+      console.log(removeActiveRes);
+    }
+  
   }
 });
 
@@ -95,6 +115,13 @@ window.onload = async () => {
   prepareSlides();
   previewSlides();
   //console.log(presentation);
+
+  // Check to see if presentation is active
+  if(localStorage.getItem("activePresentationKey")){
+    activeKeyDiv.innerHTML = localStorage.getItem("activePresentationKey");
+    start.innerHTML = "Stop presentation";
+    isActive = true;
+  }
 };
 
 async function getCurrentPresentation() {

@@ -447,6 +447,14 @@ label {
   height: 90px;
 }
 
+#active-key{
+  min-height: 50px;
+  width: 150px;
+  background-color: var(--col-secondary-container);
+  color: var(--col-on-secondary-container);
+  font-weight: 600;
+}
+
 .presenter-script{
   border: 1px solid var(--col-outline);
   padding: 1rem;
