@@ -1,7 +1,6 @@
 const fs = require("fs");
 const Storage = require("./modules/db.js");
 const express = require("express");
-const { off } = require("process");
 const server = express();
 const PORT = 8080;
 
@@ -221,13 +220,13 @@ server.post("/createPresentation", async (req, res) => {
     .toString("UTF-8")
     .split(":");
 
-    let result = await db.createPresentation(req.body.userId);
-    console.log(result);
-    if(result !== -1){
-      res.status(200).json({msg: "Success", id: result}).end();
-    } else {
-      res.status(500).end();
-    }
+  let result = await db.createPresentation(req.body.userId);
+  console.log(result);
+  if (result !== -1) {
+    res.status(200).json({ msg: "Success", id: result }).end();
+  } else {
+    res.status(500).end();
+  }
 });
 
 server.post("/oldCreatePresentation", (req, res) => {
@@ -452,35 +451,62 @@ server.post("/startPresentation", (req, res) => {
   });
 });
 
-server.post("/stopPresentation", async (req, res) =>{
+server.post("/stopPresentation", async (req, res) => {
   console.log(req.body);
   let id = req.body.id;
   let key = req.body.key;
-  try{
+  try {
     let result = await db.stopPresentation(id, key);
     res.status(result).end();
-  } catch (err){
+  } catch (err) {
     console.log("Unable to stop presentation");
     console.log(err);
   }
-  
-  if(removed){
+
+  /* if(removed){
     res.status(200).end();
   } else {
     res.status(500).end();
-  }
+  } */
 });
 
-server.get("/changeSlide/:slideIndex", (req, res) => {
+function sendNewSlide(index) {
+  console.log("Changing slide");
+  
+  console.log(index);
+  
+  for(let c of connections){
+    c.write(`data: ${index}\n\n`);
+  }
+
+
+  //res.write("event: slideChange\n");
+}
+
+server.get("/changeSlide", (req, res) => {
+  sendNewSlide(req.query.slide);
+});
+
+server.get("/connectSSE", (req, res) =>{
+  res.set({
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
+  });
+  res.flushHeaders();
+  connections.push(res);
+})
+
+/* server.get("/changeSlide/:slideIndex", (req, res) => {
   /*   console.log("Changing slide");
   console.log(req.params.slideIndex);
   // Send the new slide index to all connections
   for (let connection of connections) {
     connection.write(`data: ${req.params.slideIndex}\n\n`);
   } */
-  slideIndex = parseInt(req.params.slideIndex);
+/*slideIndex = parseInt(req.params.slideIndex);
   res.end();
-});
+}); */
 
 server.get("/slideIndex", (req, res) => {
   res.json({ index: slideIndex }).end();

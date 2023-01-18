@@ -36,7 +36,8 @@ previous.addEventListener("click", async () => {
     currentSlide -= 1;
     previewSlides();
     // Notify server that slide has been changed
-    await fetch(`/changeSlide/${currentSlide}`);
+    //await fetch(`/changeSlide/${currentSlide}`);
+    await fetch(`/changeSlide?slide=${currentSlide}`);
   } else {
     console.log("This is the start of the presentation");
   }
@@ -102,7 +103,8 @@ next.addEventListener("click", async () => {
     currentSlide += 1;
     previewSlides();
     // Notify server that slide has been changed
-    await fetch(`/changeSlide/${currentSlide}`);
+    //await fetch(`/changeSlide/${currentSlide}`);
+    await fetch(`/changeSlide?slide=${currentSlide}`);
   } else {
     console.log("You have reached the end of the slide deck");
   }
