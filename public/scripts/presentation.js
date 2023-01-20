@@ -5,7 +5,7 @@ const slides = document.getElementById("slides");
 let presentationKey = -1;
 let slideDeck = []; // The slides
 let currentSlideIndex = 0; // Index of current slide
-const eventSource = new EventSource("/connectSSE");
+
 
 // When loading, retrieve the presentation
 window.onload = async () => {
@@ -28,23 +28,16 @@ window.onload = async () => {
 
     // Diplay the first slide
     displaySlide(currentSlideIndex);
-    console.log(eventSource);
+    console.log();
   } else {
     console.log("Error getting presentation");
   }
 
   // Listen for slide changes
- // await listen();
+  await listen();
 };
 
-eventSource.addEventListener("message", (e)=>{
-  console.log("Slide changed");
-  console.log(e.data);
-  if(parseInt(e.data) !== currentSlideIndex){
-    currentSlideIndex = parseInt(e.data);
-    displaySlide(currentSlideIndex);
-  }
-});  
+
 
 async function getPresentationByKey(key) {
   return await fetch(`/getPresentationByKey/${key}`);
@@ -58,17 +51,18 @@ function displaySlide(index) {
   slides.innerHTML = slideDeck[index];
 }
 
-/* async function listen(){
-  console.log("Listening");
+async function listen(){
+  
   let result = await fetch("/slideIndex");
   let data = await result.json();
-  console.log(data);
+  console.log(data.index !== currentSlideIndex);
   if(data.index !== currentSlideIndex){
+    
     currentSlideIndex = data.index;
     displaySlide(currentSlideIndex);
   }
   setTimeout(listen, 1000);
-} */
+}
 
 /* async function listen(){
   console.log("Listening");

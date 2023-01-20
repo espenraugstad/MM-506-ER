@@ -482,11 +482,11 @@ function sendNewSlide(index) {
 
   //res.write("event: slideChange\n");
 }
-
+/* 
 server.get("/changeSlide", (req, res) => {
   sendNewSlide(req.query.slide);
 });
-
+ */
 server.get("/connectSSE", (req, res) =>{
   res.set({
     "Content-Type": "text/event-stream",
@@ -497,16 +497,21 @@ server.get("/connectSSE", (req, res) =>{
   connections.push(res);
 })
 
-/* server.get("/changeSlide/:slideIndex", (req, res) => {
+server.get("/changeSlide/:slideIndex", (req, res) => {
   /*   console.log("Changing slide");
   console.log(req.params.slideIndex);
   // Send the new slide index to all connections
   for (let connection of connections) {
     connection.write(`data: ${req.params.slideIndex}\n\n`);
   } */
-/*slideIndex = parseInt(req.params.slideIndex);
-  res.end();
-}); */
+  let newSlideIndex = parseInt(req.params.slideIndex);
+  if(newSlideIndex !== slideIndex){
+    slideIndex = newSlideIndex;
+    res.status(200).end();
+  } else {
+    res.status(304).end();
+  }
+});
 
 server.get("/slideIndex", (req, res) => {
   res.json({ index: slideIndex }).end();
