@@ -126,17 +126,35 @@ server.get("/getPresentation/:presentation_id", (req, res) => {
       let currentUserId = currentUser.user_id;
 
       let allPresentations = presentationDb.presentations;
-
+      console.log(allPresentations);
       // Find the presentation with the id provided by the request object
-      let presentation = allPresentations.find(
-        (pres) =>
-          parseInt(req.params.presentation_id) === pres.presentation_id &&
-          pres.owner_id === currentUserId
-      );
-      if (presentation) {
-        res.status(200).json(presentation).end();
+      if (currentUser.role === "presenter") {
+        let presentation = allPresentations.find(
+          (pres) =>
+            parseInt(req.params.presentation_id) === pres.presentation_id &&
+            pres.owner_id === currentUserId
+        );
+        if (presentation) {
+          res.status(200).json(presentation).end();
+        } else {
+          res.status(500).json({ message: "Presentation not found" }).end();
+        }
+      } else if(currentUser.role === "student"){
+        console.log("Current role is student");
+        console.log(currentUser);
+
+        let presentation = allPresentations.find((pres) => { return (parseInt(req.params.presentation_id) === pres.presentation_id && pres.hasAccess.findIndex(id => id === currentUser.user_id) !== -1);
+        });
+        console.log(presentation);
+
+        if(presentation){
+          res.status(200).json(presentation).end();
+        } else {
+          res.status(404).json({message: "Presentation not found"}).end();
+        }
+
       } else {
-        res.status(500).json({ message: "Presentation not found" }).end();
+        res.status(400).json({message: "Invalid role"}).end();
       }
     }
   });
@@ -472,13 +490,12 @@ server.post("/stopPresentation", async (req, res) => {
 
 function sendNewSlide(index) {
   console.log("Changing slide");
-  
+
   console.log(index);
-  
-  for(let c of connections){
+
+  for (let c of connections) {
     c.write(`data: ${index}\n\n`);
   }
-
 
   //res.write("event: slideChange\n");
 }
@@ -487,7 +504,7 @@ server.get("/changeSlide", (req, res) => {
   sendNewSlide(req.query.slide);
 });
  */
-server.get("/connectSSE", (req, res) =>{
+server.get("/connectSSE", (req, res) => {
   res.set({
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
@@ -495,7 +512,7 @@ server.get("/connectSSE", (req, res) =>{
   });
   res.flushHeaders();
   connections.push(res);
-})
+});
 
 server.get("/changeSlide/:slideIndex", (req, res) => {
   /*   console.log("Changing slide");
@@ -505,7 +522,7 @@ server.get("/changeSlide/:slideIndex", (req, res) => {
     connection.write(`data: ${req.params.slideIndex}\n\n`);
   } */
   let newSlideIndex = parseInt(req.params.slideIndex);
-  if(newSlideIndex !== slideIndex){
+  if (newSlideIndex !== slideIndex) {
     slideIndex = newSlideIndex;
     res.status(200).end();
   } else {

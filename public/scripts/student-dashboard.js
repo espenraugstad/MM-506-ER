@@ -21,6 +21,7 @@ logoutBtn.addEventListener("click", () => {
 viewPresentation.addEventListener("click", ()=>{
     if(document.querySelector(".deckline--selected")){
         console.log(`Viewing presentation with id ${selectedPresentationId}`);
+        location.href = `./student-view.html?id=${selectedPresentationId}`;
     }
 })
 
