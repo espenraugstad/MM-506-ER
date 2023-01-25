@@ -1,23 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles/styles.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/styles.css" />
     <title>MM-506-ER</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="full-container flex-col">
-        <h1 id="presentation-title"></h1>
+      <h1 id="presentation-title"></h1>
     </div>
     <div class="container-sidebar">
-        <div class="preview-bar flex flex-col">
-            <h2>Preview</h2>
-            <div id="previews" class="secondary-container flex-align full-height flex flex-col"></div>
+      <div class="preview-bar flex flex-col">
+        <h2>Preview</h2>
+        <div
+          id="previews"
+          class="secondary-container flex-align full-height flex flex-col"
+        ></div>
+      </div>
+
+      <!-- REPLACE START -->
+      <div class="main-container flex flex-col">
+      
+          <h2>Modules</h2>
+          
+          
+      
+
+        <div id="student-modules-list" class="flex flex-wrap">
+            <div class="student-module">Live</div>
+            <div class="student-module">Notes</div>
+            <div class="student-module">Module</div>
         </div>
+      </div>
+      <!-- REPLACE END -->
     </div>
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="./scripts/student-view.js"></script>
-</body>
+  </body>
 </html>
