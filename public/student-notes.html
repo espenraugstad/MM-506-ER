@@ -11,6 +11,7 @@
     <div class="full-container flex-col">
       <h1 id="presentation-title"></h1>
     </div>
+
     <div class="container-sidebar">
       <div class="preview-bar flex flex-col">
         <h2>Preview</h2>
@@ -22,18 +23,33 @@
 
       <!-- REPLACE START -->
       <div class="main-container flex flex-col">
-      
-          <h2>Modules</h2>
-        <div id="student-modules-list" class="flex flex-wrap">
-            <div class="student-module" id="student-module-live">Live</div>
-            <div class="student-module" id="student-module-notes">Notes</div>
-            <div class="student-module" id="">Module</div>
+        <h2>Notes</h2>
+
+        <div id="authoring-editor-container" class="flex flex-col">
+          <textarea
+            name="editor"
+            id="authoring-editor"
+            class="secondary-container"
+            cols="30"
+            rows="10"
+          >Click on a slide to edit notes.</textarea>
+          <div class="flex flex-between">
+            <div>
+              <button id="save-presentation-button">Save presentation</button>
+              <button id="clear-editor-button">Clear editor</button>
+              <button id="show-notes-button">Show notes</button>
+            </div>
+            <div>
+              <button id="dashboard-button">Back to dashboard</button>
+              <button id="go-to-presenter-button">Go to presenter</button>
+            </div>
+          </div>
         </div>
       </div>
       <!-- REPLACE END -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="./scripts/student-view.js" type="module"></script>
+    <script src="./scripts/student-notes.js" type="module"></script>
   </body>
 </html>

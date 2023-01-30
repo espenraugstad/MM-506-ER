@@ -79,10 +79,7 @@ server.get("/userPresentations/:userId", (req, res) => {
       console.log(err);
     } else {
       let presentations = JSON.parse(data).presentations;
-      //console.log(presentations);
-      /*       for (let p of presentations) {
-        console.log(typeof id);
-      } */
+
       // Filter presentations for the relevant user
       let returnPresentations = presentations.filter(
         (p) => p.owner_id === parseInt(id)
@@ -122,11 +119,9 @@ server.get("/getPresentation/:presentation_id", (req, res) => {
       let currentUser = users.filter(
         (u) => u.username === username && u.password === password
       )[0];
-      console.log(currentUser);
       let currentUserId = currentUser.user_id;
 
       let allPresentations = presentationDb.presentations;
-      console.log(allPresentations);
       // Find the presentation with the id provided by the request object
       if (currentUser.role === "presenter") {
         let presentation = allPresentations.find(
@@ -141,11 +136,9 @@ server.get("/getPresentation/:presentation_id", (req, res) => {
         }
       } else if(currentUser.role === "student"){
         console.log("Current role is student");
-        console.log(currentUser);
 
         let presentation = allPresentations.find((pres) => { return (parseInt(req.params.presentation_id) === pres.presentation_id && pres.hasAccess.findIndex(id => id === currentUser.user_id) !== -1);
         });
-        console.log(presentation);
 
         if(presentation){
           res.status(200).json(presentation).end();
@@ -169,8 +162,7 @@ server.get("/studentPresentations/:studentId", async (req, res) => {
   } else {
     res.status(500).end();
   }
-  //let dta = await db.getDatabase();
-  //console.log(dta);
+
 });
 
 server.get("/getPresentationNotes/:presentation_id", (req, res) => {
@@ -252,9 +244,7 @@ server.post("/oldCreatePresentation", (req, res) => {
   let [username, password, role] = Buffer.from(token, "base64")
     .toString("UTF-8")
     .split(":");
-  /*   console.log(username);
-  console.log(password);
-  console.log(role); */
+
 
   // Read the database
   let presentationDb = null;
@@ -319,17 +309,12 @@ server.post("/savePresentation", (req, res) => {
       console.log(err);
     } else {
       presentationDb = JSON.parse(data);
-      /* console.log(presentationDb.presentations);
-            console.log(currentPresentation.presentation_id); */
+
       // Find the relevant presentation in the db, and replace it with current presentation
       let presentationIndex = presentationDb.presentations.findIndex(
         (el) => el.presentation_id === currentPresentation.presentation_id
       );
-      //console.log(presentationIndex);
-      //console.log(presentationDb.presentations[presentationIndex]);
-      //console.log(currentPresentation);
       presentationDb.presentations[presentationIndex] = currentPresentation;
-      //console.log(presentationDb);
 
       // Write the updated file to the "database"
       fs.writeFile(
@@ -386,14 +371,11 @@ server.post("/deletePresentation", (req, res) => {
           }
         }
       );
-
-      //res.status(200).json({ notes: currentNotes }).end();
     }
   });
 });
 
 server.post("/saveNotes", (req, res) => {
-  //console.log(req.body);
 
   // Read entire file
   let allPresentations = null;
@@ -407,8 +389,6 @@ server.post("/saveNotes", (req, res) => {
       let presentationIndex = allPresentations.findIndex(
         (pres) => parseInt(req.body.presentation) === pres.presentation_id
       );
-
-      //console.log(allPresentations[presentationIndex].notes);
 
       // Find index of the notes
       let notesIndex = allPresentations[presentationIndex].notes.findIndex(
@@ -481,11 +461,6 @@ server.post("/stopPresentation", async (req, res) => {
     console.log(err);
   }
 
-  /* if(removed){
-    res.status(200).end();
-  } else {
-    res.status(500).end();
-  } */
 });
 
 function sendNewSlide(index) {
@@ -496,14 +471,8 @@ function sendNewSlide(index) {
   for (let c of connections) {
     c.write(`data: ${index}\n\n`);
   }
-
-  //res.write("event: slideChange\n");
 }
-/* 
-server.get("/changeSlide", (req, res) => {
-  sendNewSlide(req.query.slide);
-});
- */
+
 server.get("/connectSSE", (req, res) => {
   res.set({
     "Content-Type": "text/event-stream",
@@ -515,12 +484,6 @@ server.get("/connectSSE", (req, res) => {
 });
 
 server.get("/changeSlide/:slideIndex", (req, res) => {
-  /*   console.log("Changing slide");
-  console.log(req.params.slideIndex);
-  // Send the new slide index to all connections
-  for (let connection of connections) {
-    connection.write(`data: ${req.params.slideIndex}\n\n`);
-  } */
   let newSlideIndex = parseInt(req.params.slideIndex);
   if (newSlideIndex !== slideIndex) {
     slideIndex = newSlideIndex;
@@ -533,22 +496,6 @@ server.get("/changeSlide/:slideIndex", (req, res) => {
 server.get("/slideIndex", (req, res) => {
   res.json({ index: slideIndex }).end();
 });
-
-/* server.get("/changeSlide/:slideIndex", (req, res) => {
-  console.log("Changing slide");
-  console.log(req.params.slideIndex);
-  // Send the new slide index to all connections
-  for (let connection of connections) {
-    connection.write(`data: ${req.params.slideIndex}\n\n`);
-  }
-}); */
-
-/* server.get("/streamPresentation", sse, (req, res) => {
-  console.log("Streaming");
-  res.sseSetup();
-  //res.sseSend("test");
-  connections.push(res);
-}); */
 
 server.get("/streamPresentation", (req, res) => {
   console.log("Streaming");

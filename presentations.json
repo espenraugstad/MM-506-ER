@@ -1,1 +1,334 @@
-{"presentations":[{"presentation_id":0,"presentation_title":"Test presentation","owner_id":0,"markdown":"# Welcome\nThis is a welcome message.\n\n---\n\n# Example\n* Point 1\n* Point 2\n\n---\n# More fun stuff\nThis project is being developed as part of a masters project at the [University of Agder].\n\n---\n# Test\nSlide.\n\n---\n\n# This is a slide with an image\nAnd here is an image: \n\n![Alt text](images/book-cover.jpg)\n\n[University of Agder]: https://www.uia.no/\n\n---\n# A sixth slide suddenly appears\nWhat is this all about?\n","slides":[{"index":1,"content":"<h1 id=\"heading-1\">Heading 1</h1>\n<p>This is some example text.</p>\n"},{"index":2,"content":"\n<h1 id=\"more-fun-stuff\">More fun stuff</h1>\n<p>This project is being developed as part of a masters project at the <a href=\"https://www.uia.no/\">University of Agder</a>.</p>\n"},{"index":3,"content":"\n<h1 id=\"this-is-the-3rd-slide\">This is the 3rd slide</h1>\n<p>And here is an image: </p>\n<p><img src=\"images/book-cover.jpg\" alt=\"Alt text\"></p>\n"}],"hasAccess":[1]},{"presentation_id":1,"presentation_title":"Second Test","owner_id":1,"markdown":"","slides":[],"hasAccess":[]},{"presentation_id":2,"presentation_title":"Second Test","owner_id":0,"markdown":"# Welcome\nWelcome to what is currently called the \"Third Test\".\n\n---\n# Todo\n\n* Remember to update presentation title!\n   - Done :)","slides":[],"hasAccess":[]},{"presentation_id":6,"presentation_title":"Number 6!\n","owner_id":0,"markdown":"Here is finally some content.","slides":[],"hasAccess":[1]},{"presentation_id":7,"presentation_title":"How to delete a presentation\n","owner_id":0,"markdown":"# How to delete a presentation\n\nThis presentation is to show how to delete a presentation.\n\n---\n# Go to dashboard\nStep 1 is to go to the dashboard.\n\n---\n# Click the trashcan\nStep 2 is to click the trashcan to the right.\n\n---\n# Confirm\nConfirm (or cancel if you don't want to continue).","slides":[],"hasAccess":[]},{"presentation_id":9,"presentation_title":"Some bug\n","owner_id":0,"markdown":"","slides":[],"hasAccess":[]},{"presentation_id":10,"presentation_title":"Actually titled presentation","owner_id":0,"markdown":"","slides":[],"hasAccess":[]}],"notes":[{"user_id":1,"user":"Samstudent","presentation_id":0,"markdown":"# Notes\n\nThese are some notes.\n\n## Important points\n\n* Do as I say, not as I do.\n* Scooby Dooby Do","public":true},{"user_id":2,"user":"Tamstudent","presentation_id":0,"markdown":"# Notes\nOther notes.\n## Important points\n* Do as I say, not as I do.\n* Scooby Dooby Do","public":true},{"user_id":2,"user":"Tamstudent","presentation_id":2,"markdown":"# Something\nTestint more.\n","public":true}],"users":[{"user_id":0,"username":"Testuser","password":"123","role":"presenter"},{"user_id":1,"username":"Samstudent","password":"456","role":"student"},{"user_id":2,"username":"Tamstudent","password":"789","role":"student"}],"active":[{"key":"99100","id":"0"},{"key":"10078","id":"0"},{"key":"98423","id":"0"},{"key":"99082","id":"0"},{"key":"27435","id":"0"},{"key":"27481","id":"0"},{"key":"83141","id":"0"},{"key":"69093","id":"0"},{"key":"69839","id":"0"},{"key":"18198","id":"0"},{"key":"47814","id":"0"},{"key":"68542","id":"0"},{"key":"62373","id":"0"},{"key":"00444","id":"0"},{"key":"76854","id":"0"},{"key":"14177","id":"0"},{"key":"12541","id":"0"},{"key":"89519","id":"0"},{"key":"95508","id":"0"},{"key":"87666","id":"0"},{"key":"01216","id":"0"},{"key":"57424","id":"0"},{"key":"78249","id":"0"},{"key":"68822","id":"0"},{"key":"22135","id":"2"},{"key":"29339","id":"0"},{"key":"79125","id":"0"},{"key":"24384","id":"0"},{"key":"89316","id":"0"},{"key":"96860","id":"0"},{"key":"51651","id":"0"},{"key":"22597","id":"0"},{"key":"61016","id":"0"},{"key":"88568","id":"0"},{"key":"97606","id":"0"},{"key":"02305","id":"0"},{"key":"57684","id":"0"},{"key":"76597","id":"0"},{"key":"42953","id":"0"},{"key":"58887","id":"0"},{"key":"06905","id":"0"},{"key":"40133","id":"0"},{"key":"57963","id":"0"},{"key":"98608","id":"0"},{"key":"18252","id":"0"},{"key":"34971","id":"0"},{"key":"54815","id":"0"},{"key":"51878","id":"0"},{"key":"75429","id":"0"},{"key":"99705","id":"0"},{"key":"64721","id":"0"},{"key":"98524","id":"0"},{"key":"37715","id":"0"}]}
+{
+    "presentations": [
+        {
+            "presentation_id": 0,
+            "presentation_title": "Test presentation",
+            "owner_id": 0,
+            "markdown": "# Welcome\nThis is a welcome message.\n\n---\n\n# Example\n* Point 1\n* Point 2\n\n---\n# More fun stuff\nThis project is being developed as part of a masters project at the [University of Agder].\n\n---\n# Test\nSlide.\n\n---\n\n# This is a slide with an image\nAnd here is an image: \n\n![Alt text](images/book-cover.jpg)\n\n[University of Agder]: https://www.uia.no/\n\n---\n# A sixth slide suddenly appears\nWhat is this all about?\n",
+            "slides": [
+                {
+                    "index": 1,
+                    "content": "<h1 id=\"heading-1\">Heading 1</h1>\n<p>This is some example text.</p>\n"
+                },
+                {
+                    "index": 2,
+                    "content": "\n<h1 id=\"more-fun-stuff\">More fun stuff</h1>\n<p>This project is being developed as part of a masters project at the <a href=\"https://www.uia.no/\">University of Agder</a>.</p>\n"
+                },
+                {
+                    "index": 3,
+                    "content": "\n<h1 id=\"this-is-the-3rd-slide\">This is the 3rd slide</h1>\n<p>And here is an image: </p>\n<p><img src=\"images/book-cover.jpg\" alt=\"Alt text\"></p>\n"
+                }
+            ],
+            "hasAccess": [
+                1
+            ]
+        },
+        {
+            "presentation_id": 1,
+            "presentation_title": "Second Test",
+            "owner_id": 1,
+            "markdown": "",
+            "slides": [],
+            "hasAccess": []
+        },
+        {
+            "presentation_id": 2,
+            "presentation_title": "Second Test",
+            "owner_id": 0,
+            "markdown": "# Welcome\nWelcome to what is currently called the \"Third Test\".\n\n---\n# Todo\n\n* Remember to update presentation title!\n   - Done :)",
+            "slides": [],
+            "hasAccess": []
+        },
+        {
+            "presentation_id": 6,
+            "presentation_title": "Number 6!\n",
+            "owner_id": 0,
+            "markdown": "Here is finally some content.",
+            "slides": [],
+            "hasAccess": [
+                1
+            ]
+        },
+        {
+            "presentation_id": 7,
+            "presentation_title": "How to delete a presentation\n",
+            "owner_id": 0,
+            "markdown": "# How to delete a presentation\n\nThis presentation is to show how to delete a presentation.\n\n---\n# Go to dashboard\nStep 1 is to go to the dashboard.\n\n---\n# Click the trashcan\nStep 2 is to click the trashcan to the right.\n\n---\n# Confirm\nConfirm (or cancel if you don't want to continue).",
+            "slides": [],
+            "hasAccess": []
+        },
+        {
+            "presentation_id": 9,
+            "presentation_title": "Some bug\n",
+            "owner_id": 0,
+            "markdown": "",
+            "slides": [],
+            "hasAccess": []
+        },
+        {
+            "presentation_id": 10,
+            "presentation_title": "Actually titled presentation",
+            "owner_id": 0,
+            "markdown": "",
+            "slides": [],
+            "hasAccess": []
+        }
+    ],
+    "notes": [
+        {
+            "user_id": 1,
+            "user": "Samstudent",
+            "presentation_id": 0,
+            "markdown": "# Notes\n\nThese are some notes.\n\n## Important points\n\n* Do as I say, not as I do.\n* Scooby Dooby Do",
+            "public": true
+        },
+        {
+            "user_id": 2,
+            "user": "Tamstudent",
+            "presentation_id": 0,
+            "markdown": "# Notes\nOther notes.\n## Important points\n* Do as I say, not as I do.\n* Scooby Dooby Do",
+            "public": true
+        },
+        {
+            "user_id": 2,
+            "user": "Tamstudent",
+            "presentation_id": 2,
+            "markdown": "# Something\nTestint more.\n",
+            "public": true
+        }
+    ],
+    "users": [
+        {
+            "user_id": 0,
+            "username": "Testuser",
+            "password": "123",
+            "role": "presenter"
+        },
+        {
+            "user_id": 1,
+            "username": "Samstudent",
+            "password": "456",
+            "role": "student"
+        },
+        {
+            "user_id": 2,
+            "username": "Tamstudent",
+            "password": "789",
+            "role": "student"
+        }
+    ],
+    "active": [
+        {
+            "key": "99100",
+            "id": "0"
+        },
+        {
+            "key": "10078",
+            "id": "0"
+        },
+        {
+            "key": "98423",
+            "id": "0"
+        },
+        {
+            "key": "99082",
+            "id": "0"
+        },
+        {
+            "key": "27435",
+            "id": "0"
+        },
+        {
+            "key": "27481",
+            "id": "0"
+        },
+        {
+            "key": "83141",
+            "id": "0"
+        },
+        {
+            "key": "69093",
+            "id": "0"
+        },
+        {
+            "key": "69839",
+            "id": "0"
+        },
+        {
+            "key": "18198",
+            "id": "0"
+        },
+        {
+            "key": "47814",
+            "id": "0"
+        },
+        {
+            "key": "68542",
+            "id": "0"
+        },
+        {
+            "key": "62373",
+            "id": "0"
+        },
+        {
+            "key": "00444",
+            "id": "0"
+        },
+        {
+            "key": "76854",
+            "id": "0"
+        },
+        {
+            "key": "14177",
+            "id": "0"
+        },
+        {
+            "key": "12541",
+            "id": "0"
+        },
+        {
+            "key": "89519",
+            "id": "0"
+        },
+        {
+            "key": "95508",
+            "id": "0"
+        },
+        {
+            "key": "87666",
+            "id": "0"
+        },
+        {
+            "key": "01216",
+            "id": "0"
+        },
+        {
+            "key": "57424",
+            "id": "0"
+        },
+        {
+            "key": "78249",
+            "id": "0"
+        },
+        {
+            "key": "68822",
+            "id": "0"
+        },
+        {
+            "key": "22135",
+            "id": "2"
+        },
+        {
+            "key": "29339",
+            "id": "0"
+        },
+        {
+            "key": "79125",
+            "id": "0"
+        },
+        {
+            "key": "24384",
+            "id": "0"
+        },
+        {
+            "key": "89316",
+            "id": "0"
+        },
+        {
+            "key": "96860",
+            "id": "0"
+        },
+        {
+            "key": "51651",
+            "id": "0"
+        },
+        {
+            "key": "22597",
+            "id": "0"
+        },
+        {
+            "key": "61016",
+            "id": "0"
+        },
+        {
+            "key": "88568",
+            "id": "0"
+        },
+        {
+            "key": "97606",
+            "id": "0"
+        },
+        {
+            "key": "02305",
+            "id": "0"
+        },
+        {
+            "key": "57684",
+            "id": "0"
+        },
+        {
+            "key": "76597",
+            "id": "0"
+        },
+        {
+            "key": "42953",
+            "id": "0"
+        },
+        {
+            "key": "58887",
+            "id": "0"
+        },
+        {
+            "key": "06905",
+            "id": "0"
+        },
+        {
+            "key": "40133",
+            "id": "0"
+        },
+        {
+            "key": "57963",
+            "id": "0"
+        },
+        {
+            "key": "98608",
+            "id": "0"
+        },
+        {
+            "key": "18252",
+            "id": "0"
+        },
+        {
+            "key": "34971",
+            "id": "0"
+        },
+        {
+            "key": "54815",
+            "id": "0"
+        },
+        {
+            "key": "51878",
+            "id": "0"
+        },
+        {
+            "key": "75429",
+            "id": "0"
+        },
+        {
+            "key": "99705",
+            "id": "0"
+        },
+        {
+            "key": "64721",
+            "id": "0"
+        },
+        {
+            "key": "98524",
+            "id": "0"
+        },
+        {
+            "key": "37715",
+            "id": "0"
+        }
+    ]
+}
