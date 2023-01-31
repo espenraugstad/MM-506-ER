@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <link rel="stylesheet" href="./styles/styles.css" />
+    <title>MM-506-ER</title>
+  </head>
+  <body>
+    <div class="full-container flex-col">
+      <h1>Edit presentation</h1>
+    </div>
+    <div class="container-sidebar">
+      <div class="preview-bar flex flex-col">
+        <h2>Preview</h2>
+        <div id="previews" class="secondary-container flex-align full-height flex flex-col"></div>
+      </div>
+      <div class="main-container flex-col">
+        <div  class="flex flex-center">
+          <h2 id="presentation-title" contenteditable="true"></h2> 
+          <span class="material-symbols-outlined edit-presentation-icon">edit</span>
+        </div>
+
+        <div id="authoring-editor-container" class="flex flex-col">
+            <textarea name="editor" id="authoring-editor" class="secondary-container" cols="30" rows="10"></textarea>
+            <div class="flex flex-between">
+                <div>
+                    <button id="save-presentation-button">Save presentation</button>
+                    <button id="clear-editor-button">Clear editor</button>
+                    <button id="show-notes-button">Show notes</button>
+                </div>
+                <div>
+                  <button id="dashboard-button">Back to dashboard</button>
+                  <button id="go-to-presenter-button">Go to presenter</button>
+                </div>
+                
+            </div>
+        </div>
+
+        <div id="authoring-show-notes" class="flex flex-col flex-align full hidden">Public notes</div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="./scripts/authoring.js" type="module"></script>
+  </body>
+</html>
