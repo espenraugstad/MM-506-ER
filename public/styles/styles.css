@@ -34,6 +34,7 @@ body {
   --font-title-large: 22px;
   --font-title-medium: 16px;
   --font-body-large: 16px;
+  --font-label-large: 14px;
 
   background-color: var(--col-background);
   color: var(--col-on-background);
@@ -51,6 +52,10 @@ body {
   font-weight: 600;
 }
 
+.label-large{
+  font-size: var(--font-label-large);
+}
+
 h1 {
   font-size: 32px;
 }
@@ -58,6 +63,11 @@ h1 {
 h2 {
   font-size: 24px;
   font-weight: 400;
+}
+
+h3{
+  font-size: 20px;
+  font-weight: 800;
 }
 
 .center-container {
@@ -350,15 +360,50 @@ label {
 
 .authoring-previews{
   background-color: red;
-  height: 80vh;
+  min-height: 80vh;
 }
 
 .authoring-main{
   background-color: blueviolet;
+  width: 100%;
 }
 
 .authoring-edit{
-  background-color: #001d33;
+  background-color: pink;
+  padding: 0 1rem;
+}
+
+.authoring-slide{
+  background-color: yellow;
+  height: 423px;
+  width: 752px;
+  margin: 2rem 0;
+}
+
+.plus-button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--col-primary); 
+  width: 21px;
+  height: 21px;
+  border-radius: 21px;
+  color: var(--col-on-primary);
+  margin-right: .25rem;
+}
+
+.imageplacements{
+  max-width: 100px;
+}
+
+.imageplacement{
+  width: 15px;
+  height: 20px;
+  background-color: var(--col-background);
+} 
+
+.image-place{
+  background-color: var(--col-outline);
 }
 
 #presentation-title {

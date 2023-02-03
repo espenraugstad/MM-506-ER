@@ -27,9 +27,32 @@
           <button id="presentBtn">Start presentation</button>
         </div>
       </div>
-      <div class="authoring-previews">Previews</div>
-      <div class="authoring-main">Main</div>
-      <div class="authoring-edit">Edit content</div>
+      <div class="authoring-previews flex flex-col flex-align" id="previews">Previews</div>
+      <div class="authoring-main flex flex-col flex-align">
+        <div id="slide" class="authoring-slide flex flex-col flex-align"></div>
+        <div>
+          <h2>Add notes</h2>
+          <textarea name="editor" id="authoring-editor" class="secondary-container" cols="30" rows="10"></textarea>
+        </div>
+      </div>
+      <div class="authoring-edit flex flex-col">
+        <h3>Image</h3>
+        <div class="flex"><span class="plus-button">+</span> Add / replace image</div>
+        <div>Imagename</div>
+        <p>Placement</p>
+        <div class="flex flex-between imageplacements">
+          <div class="flex" id="image-left">
+            <span class="imageplacement image-place"></span>
+            <span class="imageplacement"></span>
+          </div>
+          <div class="flex" id="image-cover">
+            <span class="imageplacement image-place"></span>
+            <span class="imageplacement image-place"></span></div>
+          <div class="flex" id="image-right">
+            <span class="imageplacement"></span>
+            <span class="imageplacement image-place"></span></div>
+        </div>
+      </div>
     </div>
 
     <script src="./scripts/authoring.js" type="module"></script>
